@@ -8,9 +8,7 @@
   "scripts": {
     "build": "rm -rf ./lib; NODE_ENV=production babel ./modules -d lib --ignore '__tests__'",
     "lint": "eslint ./modules",
-    "test": "mocha -w __tests__/helpers/browser.js __tests__/*.spec.js",
-    "postversion": "npm publish && git push && git push --tags",
-    "prepublish": "npm run lint && npm run build"
+    "test": "mocha -w __tests__/helpers/browser.js __tests__/*.spec.js"
   },
   "peerDependencies": {
     "prop-types": "~15.x.x",
