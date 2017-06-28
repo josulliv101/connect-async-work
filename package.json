@@ -1,10 +1,10 @@
 {
   "name": "@josulliv101/connect-async-work",
-  "version": "1.0.0",
+  "version": "1.0.7",
   "description": "",
   "main": "lib/index.js",
   "author": "Joe Sullivan",
-  "license": "ISC",
+  "license": "MIT",
   "scripts": {
     "build": "rm -rf ./lib; NODE_ENV=production babel ./modules -d lib --ignore '__tests__'",
     "lint": "eslint ./modules",
