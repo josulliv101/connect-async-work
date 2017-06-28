@@ -1,8 +1,10 @@
-import { createAction, handleActions } from 'redux-actions';
+import { handleActions } from 'redux-actions';
 
 const initialState = {
   loaded: false,
   loadState: {},
 };
 
-export const reducer = handleActions({}, initialState);
+const reducer = handleActions({}, initialState);
+
+export default reducer;

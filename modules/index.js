@@ -1,1 +1,1 @@
-export { reducer } from './store';
+export reducer from './store';
