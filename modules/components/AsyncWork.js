@@ -45,7 +45,7 @@ class AsyncWork extends React.Component {
     ]),
     asyncWorkKeys: PropTypes.arrayOf(PropTypes.string),
     children: PropTypes.node,
-    loading: PropTypes.bool, // True if all aync work is done
+    loading: PropTypes.bool, // True if all aync work is done.
     match: PropTypes.object, // Most likely provided by a Route
   };
   
