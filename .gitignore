@@ -3,6 +3,8 @@ node_modules
 umd
 *.log
 /*.js
+components
+containers
 !karma.conf.js
 !tests.webpack.js
 !webpack.config.js
