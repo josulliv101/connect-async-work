@@ -25,8 +25,23 @@ export default function withAsyncWork(asyncWork, mapStateToProps, mapDispatchToP
     const customMapDispatchToProps = Object.assign({}, mapDispatchToProps, {fetchCancel, action});
 
     class AsyncWorkComponent extends React.Component {
+      
+      static asyncWork = true;
+
+      shouldComponentUpdate(nextProps, nextState) {
+/*        console.log('async:: loading', this.props.loading, nextProps.loading);
+        console.log('async:: location.pathname', this.props.location.pathname, nextProps.location.pathname);*/
+
+        // Hold off on render on initial route change
+        if (this.props.location.pathname !== nextProps.location.pathname) {
+          console.log('aynsc-decorator', 'Hold off on render on initial route change');
+          return false;
+        }
+        return true;
+      }
 
       componentWillMount() {
+        console.log('async componentWillMount', this.props);
         const { id, cached, keyReducer, loading } = this.props;
         if (!cached && !loading) this.props.action(id, keyReducer);
       }
@@ -41,6 +56,8 @@ export default function withAsyncWork(asyncWork, mapStateToProps, mapDispatchToP
       }
     };
 
-    return connect(finalMapStateToProps, customMapDispatchToProps, mergeProps, options)(AsyncWorkComponent);
+    const c =  connect(finalMapStateToProps, customMapDispatchToProps, mergeProps, options)(AsyncWorkComponent);
+    c.asyncWork = true;
+    return c;
   };
 }
