@@ -1,6 +1,6 @@
 {
-  "name": "@josulliv101/connect-async-work2",
-  "version": "1.0.1",
+  "name": "@josulliv101/connect-async-work",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,16 @@
     "test": "karma start --single-run",
     "test:watch": "karma start"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josulliv101/connect-async-work.git"
+  },
+  "author": "Joe Sullivan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/josulliv101/connect-async-work/issues"
+  },
+  "homepage": "https://github.com/josulliv101/connect-async-work#readme",
   "peerDependencies": {
     "react": "^15"
   },
@@ -62,7 +72,5 @@
     "sinon": "^2.3.6",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
-  },
-  "author": "",
-  "license": "MIT"
+  }
 }
