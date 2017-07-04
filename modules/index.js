@@ -1,3 +1,4 @@
-export connectAsyncWork from './containers/decorator';
-export { watchApi } from './sagas/api';
-export reducer from './store';
+export AsyncWork from './components/AsyncWork'
+export connectAsyncWork from './containers/decorator'
+export { reducer } from './store'
+export { asyncWork } from './middleware'

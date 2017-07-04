@@ -1,6 +1,12 @@
-Connected Async Work for Redux-Saga
-============
-[![npm version](https://img.shields.io/npm/v/connect-async-work.svg?style=flat-square)](https://www.npmjs.com/package/connect-async-work)
-[![Build Status](https://travis-ci.org/josulliv101/connect-async-work.svg?branch=master)](https://travis-ci.org/josulliv101/connect-async-work)
+# connect-async-work2
 
-Experimental && Under Development
+Experimental & Under Development.
+
+Hope is to also be react-router v4 friendly
+
+- Work with react-router v4
+- Work with either middleware/redux-saga
+- Be able to cancel requests
+- Delay router transitions or be able to display 'is loading' cmp
+- Work on server side
+- Nested async routes

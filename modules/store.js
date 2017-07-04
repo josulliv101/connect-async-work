@@ -1,19 +1,36 @@
 import { createAction, handleActions } from 'redux-actions';
 
-export const fetchRequest = createAction('@connect-async-work/FETCH_REQUEST', key => ({ key }), (key) => ({ key }));
-export const fetchSuccess = createAction('@connect-async-work/FETCH_SUCCEESS', (key, data) => ({ key, data }));
-export const fetchFailure = createAction('@connect-async-work/FETCH_FAILURE', (key, error) => ({ key, error }));
-export const fetchCancel = createAction('@connect-async-work/FETCH_CANCEL', key => ({ key }));
-export const fetchCached = createAction('@connect-async-work/FETCH_CACHED');
+export const asyncWorkInit = createAction('@async-work/INIT', key => ({ key }), (key, work = []) => ({ key, work }));
+export const asyncWorkResolve = createAction('@async-work/RESOLVE', (key, data) => ({ key, data }), (key) => ({ key }));
+export const asyncWorkCancel = createAction('@async-work/CANCEL', key => ({ key }));
+export const asyncWorkError = createAction('@async-work/ERROR', (key, error) => ({ key, error }));
+
+export const BASE = "asyncWork";
+export const WORK = "work";
+export const LOADSTATE = "loadState";
+
+export const paths = {
+  BASE: "asyncWork",
+  WORK: "work",
+  LOADSTATE: "loadState",
+}
+
+const { BASE: BASE2, WORK: WORK2, LOADSTATE: LOADSTATE2 } = paths;
 
 const initialState = {
-  data: {},
-  loadState: {},
-};
+  [WORK2]: {},
+  [LOADSTATE2]: {},
+}
 
-const reducer = handleActions({
+export const isLoaded = (globalState, key) => 
+              globalState[BASE2][LOADSTATE2][key] && globalState[BASE2][LOADSTATE2][key].loaded;
 
-  [fetchRequest]: (state, {payload: { key }}) => ({
+export const isLoading = (globalState, key) => 
+              globalState[BASE2][LOADSTATE2][key] && globalState[BASE2][LOADSTATE2][key].loading;
+
+export const reducer = handleActions({
+
+  [asyncWorkInit]: (state, {payload: { key }}) => ({
     ...state,
     loadState: {
       ...state.loadState,
@@ -23,7 +40,7 @@ const reducer = handleActions({
       },
     },
   }),
-  [fetchSuccess]: (state, {payload: { key, data }}) => ({
+  [asyncWorkResolve]: (state, {payload: { key, data }}) => ({
     ...state,
     loadState: {
       ...state.loadState,
@@ -33,15 +50,23 @@ const reducer = handleActions({
         error: null,
       },
     },
-    [key]: data,
+    work: {
+      ...state.work,
+      [key]: data,
+    },
   }),
-  [fetchFailure]: (state, {payload}) => ({
+  [asyncWorkError]: (state, {payload: { key, error }}) => ({
     ...state,
-    error: payload,
-    loading: false,
-    loaded: false,
+    loadState: {
+      ...state.loadState,
+      [key]: {
+        loading: false,
+        loaded: false,
+        error,
+      },
+    },
   }),
-  [fetchCancel]: (state, {payload: { key }}) => ({
+  [asyncWorkCancel]: (state, {payload: { key }}) => ({
     ...state,
     loadState: {
       ...state.loadState,
@@ -54,6 +79,3 @@ const reducer = handleActions({
 
 }, initialState);
 
-export default reducer;
-
-export const isCached = (globalState, key) => globalState.api.loadState[key];

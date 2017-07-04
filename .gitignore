@@ -1,4 +1,7 @@
+es
 node_modules
-lib
-.idea
-npm-debug.log
+umd
+/*.js
+!karma.conf.js
+!tests.webpack.js
+!webpack.config.js
