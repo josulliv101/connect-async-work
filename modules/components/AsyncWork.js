@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import invariant from 'invariant'
 
-import { asyncWorkInit, asyncWorkCancel, isLoaded, isLoading, BASE } from '../store'
+import { asyncWorkInit, asyncWorkCancel, anyLoading, isLoaded, isLoading, BASE } from '../store'
 
 export function withAsyncWork(asyncWorkKey, asyncWorkItems = []) {
 
@@ -14,7 +14,7 @@ export function withAsyncWork(asyncWorkKey, asyncWorkItems = []) {
       static asyncWorkDone = false
       static asyncWorkKey = asyncWorkKey
       static asyncWorkKeys = asyncWorkItems
-
+      static isAsyncWorkDone = () => true
 
       render() {
 
@@ -71,7 +71,6 @@ class AsyncWork extends React.Component {
 
   componentWillMount() {
     const { props: { asyncWorkItems: work }, key, context: { store } } = this;
-
     for (let i=0; i<work.length; i++) {
       const key = work[i].key;
       if (key && !this.isLoaded(key) && !this.isLoading(key)) {
@@ -99,7 +98,9 @@ class AsyncWork extends React.Component {
       loading: this.isLoading(key),
     }
 
-    if (!WrappedComponent) return null;
+    if (!WrappedComponent) return null
+    
+    if (this.anyLoading()) return null
 
     return (<WrappedComponent {...props} {...addedProps} />);
   }
@@ -107,10 +108,10 @@ class AsyncWork extends React.Component {
   //// Helpers //// 
 
   getAsyncWorkKey   = (key, match = this.props.match) => typeof key === 'function' ? key(match) : key
-  isLoading         = (key) => isLoading(this.getState(), key);
-  isLoaded          = (key) => isLoaded(this.getState(), key);
+  isLoading         = (key) => isLoading(this.getState(), key)
+  isLoaded          = (key) => isLoaded(this.getState(), key)
+  anyLoading        = () => anyLoading(this.getState())
   getState          = () => this.context.store.getState()
-
   getWorkFromState(key, globalState = this.getState()) {
     if (!key) return null;
     return this.isLoaded(key) ? globalState[BASE].work && globalState[BASE].work[key] : null;

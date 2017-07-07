@@ -6,12 +6,12 @@ import { asyncWorkInit, asyncWorkResolve, asyncWorkError } from './store'
 const ASYNC_WORK_INIT = asyncWorkInit().type
 
 export const asyncWork = store => next => action => {
-  
-  const { key, work } = action.meta;
 
   if (action.type !== ASYNC_WORK_INIT) {
     return next(action)
   }
+  
+  const { key, work } = action.meta;
   
   invariant(
     work,

@@ -28,6 +28,9 @@ export const isLoaded = (globalState, key) =>
 export const isLoading = (globalState, key) => 
               globalState[BASE2][LOADSTATE2][key] && globalState[BASE2][LOADSTATE2][key].loading;
 
+export const anyLoading = (globalState) => Object.values(globalState[BASE2][LOADSTATE2]).some(item => item.loading)
+
+
 export const reducer = handleActions({
 
   [asyncWorkInit]: (state, {payload: { key }}) => ({
