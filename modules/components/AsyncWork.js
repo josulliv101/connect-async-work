@@ -2,84 +2,44 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import invariant from 'invariant'
 
-import { asyncWorkInit, asyncWorkCancel, anyLoading, isLoaded, isLoading, BASE } from '../store'
-
-export function withAsyncWork(asyncWorkKey, asyncWorkItems = []) {
-
-  return (WrappedComponent) => {
-
-    return class withAsyncWork extends React.Component {
-
-      static asyncWork = true
-      static asyncWorkDone = false
-      static asyncWorkKey = asyncWorkKey
-      static asyncWorkKeys = asyncWorkItems
-      static isAsyncWorkDone = () => true
-
-      render() {
-
-        let asyncWorkKeys2 = asyncWorkItems.map(item => {
-          return item.key
-        });
-
-        const addedProps = { 
-          asyncWorkItems, 
-          asyncWorkKey, 
-          asyncWorkKeys: asyncWorkKeys2, 
-          WrappedComponent
-        };
-        return <AsyncWork {...this.props} {...addedProps} />
-      }
-    }
-  }
-}
+import { asyncDoWork, asyncWorkCancel } from '../store'
 
 class AsyncWork extends React.Component {
 
   static propTypes = {
-    action: PropTypes.object,
-    asyncWorkItems: PropTypes.arrayOf(PropTypes.object),
-    asyncWorkKey: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.func, // Incorporate a param id into the key
-    ]),
-    asyncWorkKeys: PropTypes.arrayOf(PropTypes.string),
+    keys: PropTypes.arrayOf(PropTypes.string),
+    workItems: PropTypes.arrayOf(PropTypes.object),
     children: PropTypes.node,
-    loading: PropTypes.bool, // True if all aync work is done.
+    loading: PropTypes.bool, // True if any async work is unresolved for each component
     match: PropTypes.object, // Most likely provided by a Route
+    workInitialized: PropTypes.bool,
   };
   
-  static contextTypes = { store: PropTypes.object };
-
-  static defaultProps = {
-    asyncWorkItems: [],
-    match: { params: {}},
+  static contextTypes = { 
+    asyncRender: PropTypes.bool,
   };
 
-  constructor(props, context) {
-
-    super(props);
-
-    invariant(
-      context.store,
-      `A store needs to be included in the AsyncWork component's context.`
-    )
-
-    this.key = this.getAsyncWorkKey(this.props.asyncWorkKey)
-
-  }
+  static defaultProps = {
+    workItems: [],
+    match: { params: {} },
+  };
 
   componentWillMount() {
-    const { props: { asyncWorkItems: work }, key, context: { store } } = this;
-    for (let i=0; i<work.length; i++) {
-      const key = work[i].key;
-      if (key && !this.isLoaded(key) && !this.isLoading(key)) {
-        store.dispatch(asyncWorkInit(key, work))
-      }
-    }
+
+    const {dispatch, workInitialized, workItems} = this.props;
+    const {asyncRender} = this.context;
+
+    // 'Initialized' work is either in the process of being resolved or already resolved.
+    if (workInitialized === true) return;
+
+    // The async work not attached to `AsyncWork Class` since work may be dependent on a match params
+    this.workPromise = new Promise((resolve, reject) => {
+      // The middleware intercepts and handles creating actions for each work item which affects the store state
+      dispatch(asyncDoWork(workItems, asyncRender, (data) => resolve(data)));
+    });
   }
 
-  componentWillUnmount() {
+/*  componentWillUnmount() {
     const { props: { asyncWorkItems: work }, key, context: { store } } = this;
     for (let i=0; i<work.length; i++) {
       const key = work[i].key;
@@ -87,35 +47,31 @@ class AsyncWork extends React.Component {
         store.dispatch(asyncWorkCancel(key))
       }
     }
-  }
+  }*/
 
   render() {
 
-    const { key, props: { children, WrappedComponent, ...props } } = this
-    const addedProps = {
-      asyncWorkKey: key,
-      [key]: this.getWorkFromState(key),
-      loading: this.isLoading(key),
+    // The propsToPass will contain the appropriate key for each item of
+    // work... provided by the HOC which connects to the store
+    const {children, workItems, ...propsToPass} = this.props;
+
+    // The child is the wrapped component - already with neeeded props via HOC
+    const ChildComponent = children ? React.Children.only(children) : null;
+
+    // The `is` prop avoids a warning about needing lowercase elements.
+    const elementProps = { is: 'AsyncWork', promise: this.workPromise };
+
+    // Wrap the ChildComponent in an AsyncWork tag when doing async render.
+    // This gives the renderer access to the promise object on the instance.
+    // Without this custom element, renderer converts all to html tags 
+    // which cannot have a custom props like a promise.
+    // Better way to accomplish this?
+    if (this.context.asyncRender) {
+      return React.createElement('AsyncWork', elementProps, ChildComponent)
     }
-
-    if (!WrappedComponent) return null
-    
-    if (this.anyLoading()) return null
-
-    return (<WrappedComponent {...props} {...addedProps} />);
+    return ChildComponent
   }
 
-  //// Helpers //// 
-
-  getAsyncWorkKey   = (key, match = this.props.match) => typeof key === 'function' ? key(match) : key
-  isLoading         = (key) => isLoading(this.getState(), key)
-  isLoaded          = (key) => isLoaded(this.getState(), key)
-  anyLoading        = () => anyLoading(this.getState())
-  getState          = () => this.context.store.getState()
-  getWorkFromState(key, globalState = this.getState()) {
-    if (!key) return null;
-    return this.isLoaded(key) ? globalState[BASE].work && globalState[BASE].work[key] : null;
-  }
 }
 
 export default AsyncWork;

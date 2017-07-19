@@ -3,6 +3,7 @@ node_modules
 umd
 *.log
 /*.js
+/lib
 /components
 /containers
 /__tests__

@@ -1,57 +1,65 @@
 import invariant from 'invariant'
 
-import { asyncWorkInit, asyncWorkResolve, asyncWorkError } from './store'
+import { asyncDoWork, asyncWorkInit, asyncWorkResolve, asyncWorkError } from './store'
 
 
-const ASYNC_WORK_INIT = asyncWorkInit().type
+const ASYNC_DO_WORK = asyncDoWork().type
 
-export const asyncWork = store => next => action => {
+export const middleware = store => next => action => {
 
-  if (action.type !== ASYNC_WORK_INIT) {
+  if (action.type !== ASYNC_DO_WORK) {
     return next(action)
   }
   
-  const { key, work } = action.meta;
-  
+  const { work, asyncRender, callback } = action.meta;
+
   invariant(
     work,
-    `There isn't any work associated with the ${ASYNC_WORK_INIT} action.`
+    `There isn't any work associated with the ${ASYNC_DO_WORK} action.`
   )
 
   invariant(
-    key,
-    `There isn't a key associated with the ${ASYNC_WORK_INIT} action.`
+    callback,
+    `There isn't a callback associated with the ${ASYNC_DO_WORK} action.`
   )
-
+  
   if (!work) {
     return next(action)
   }
   
-  // Updates global state with each work item
-  for (let i =0; i < work.length; i++) {
-    next(asyncWorkInit(work[i].key))
+  console.log('middleware doing work', asyncRender, work)
+
+  // Don't update store in asyncRenders. All we care about is returning the promises.
+  if (!asyncRender) {
+
+    // Updates global state with each work item
+    for (let i =0; i < work.length; i++) {
+      console.log('middleware init action');
+      next(asyncWorkInit(work[i].key));
+    }
+
   }
 
   const promises = work.map(item => item.work())
   
-  return Promise.all(promises).then(
-    results => handleSuccess(work, store, results, next, asyncWorkResolve, key),
-    error => handleError(work, store, error, next, asyncWorkError, key),
+  return Promise.all(promises)
+  .then(
+    results => handleSuccess(work, store, results, next, asyncWorkResolve),
+    error => handleError(work, store, error, next, asyncWorkError),
   )
+  .then(callback) // noop as default
 }
 
-function handleSuccess(work, store, results, next, asyncWorkResolve, key) {
+function handleSuccess(work, store, results, next, asyncWorkResolve) {
   
   for (let i =0; i < work.length; i++) {
     next(asyncWorkResolve(work[i].key, results[i]))
   }
 
-  // const a = next(asyncWorkResolve(key, result[0]))
-  // console.log('result', result, store.getState().asyncWork.work);
-  // return a;
+  return ({work, results});
 }
 
-function handleError(work, store, error, next, asyncWorkError, key) {
+function handleError(work, store, error, next, asyncWorkError) {
   for (let i =0; i < work.length; i++) {
     next(asyncWorkError(work[i].key, error))
   }

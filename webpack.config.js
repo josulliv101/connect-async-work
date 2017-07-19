@@ -13,10 +13,11 @@ module.exports = {
       commonjs: 'react',
       amd: 'react'
     },
+    'jsdom': 'window',
     cheerio: 'window',
     'react/addons': true,
     'react/lib/ExecutionEnvironment': true,
-    'react/lib/ReactContext': true,
+    'react/lib/ReactContext': 'window'
   },
 
   module: {

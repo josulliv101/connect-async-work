@@ -3,32 +3,88 @@ import sinon, { spy } from 'sinon'
 import { mount, render } from 'enzyme'
 
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { createStore, combineReducers, applyMiddleware } from 'redux'
-import { Provider, connect } from 'react-redux';
-import watch from 'redux-watch'
 
-import { asyncWork } from '../middleware'
-import AsyncWork from '../components/AsyncWork'
-import { reducer, asyncWorkCancel, asyncWorkInit, BASE } from '../store';
+import AsyncWorkRenderer from '../../renderers/AsyncWorkRendererFiber'
+import withAsyncWork from '../../components/withAsyncWork';
 
-describe('<AsyncWork />', () => {
-  
-  const reducers = combineReducers({ asyncWork: reducer })
-  
 
-  describe('Store', () => {
+const store = { 
+  getState: () => ({ asyncwork: { work: {}, loadState: {}}}), 
+  dispatch: noop => noop, 
+  subscribe: noop => noop
+}
 
-    it('throws an error (warning) if no store is in context', () => {
-      
-      expect(function() {
-        const wrapper = mount(
-          <AsyncWork />
-        )
-      }).toThrow()
-    })
+const work = [{key: 'foo', work: () => Promise.resolve(true) }];
+
+function MockCmp1() {
+  return <main />
+}
+
+const Enhanced1 = withAsyncWork(work)(MockCmp1)
+
+function App() {
+  return (
+    <div>
+      <Enhanced1 store={store} />
+    </div>
+  )
+}
+
+
+describe('<AsyncWorkRenderer />', () => {
+
+  describe('Rendering', () => {
+
+    describe('to Promises', () => {
+
+      it('returns promises representing async work added with withAsyncWork HOC', () => {
+        const promises = AsyncWorkRenderer.renderToPromises( <App /> )
+        expect(promises.length).toBe(1);
+      })
+
+    });
+    
+    // The promise returned represents ALL work being done for that cmp
+    describe('to String', () => {
+      it('returns a promise', () => {
+        const p = AsyncWorkRenderer.renderToString(<App />)
+        expect(p[Symbol.toStringTag]).toBe('Promise');
+      })
+
+    });
+
   });
 
+/*  describe('Render', () => {
+    it('throws an error if multiple children found', () => {
+      expect(function() {
+        mount(
+          <AsyncWork>
+            <div />
+            <div />
+          </AsyncWork>
+        )
+      }).toThrow(/expected to receive a single React element child/)
+    })
+
+    it('wraps the wrapped cmp with a AsyncWork tag when asyncRender context is true', () => {
+      const wrapper = mount(
+        <AsyncWork>
+          <div />
+        </AsyncWork>
+      )
+      const wrapperAsyncRender = mount(
+        <AsyncWork>
+          <div></div>
+        </AsyncWork>,
+        { context }
+      )
+      expect(wrapper.html()).toBe('<div></div>');
+      expect(wrapperAsyncRender.html()).toMatch(/^<AsyncWork/i);
+    })
+  });*/
+
+/*
   describe('Render', () => {
 
     it('renders the wrapped component', () => {
@@ -92,9 +148,9 @@ describe('<AsyncWork />', () => {
 
     })
 
-  });
+  });*/
 
-  describe('Actions', () => {
+/*  describe('Actions', () => {
 
     it('calls INIT action on mount', () => {
       
@@ -226,8 +282,8 @@ describe('<AsyncWork />', () => {
       proto.componentWillUnmount.restore();
     })
 
-  });
-
+  });*/
+/*
   describe('Middleware', () => {
 
     it('intercepts INIT actions and processes any work', (done) => {
@@ -345,5 +401,5 @@ describe('<AsyncWork />', () => {
       );
     })
 
-  });
+  });*/
 })
