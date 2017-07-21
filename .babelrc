@@ -5,6 +5,14 @@
     "react"
   ],
   "env": {
+    "development": {
+      "plugins": [
+        ["transform-runtime", {
+          helpers: false,
+          polyfill: false,
+          regenerator: true }]
+      ]
+    },
     "production": {
       "plugins": [
         "transform-react-remove-prop-types"

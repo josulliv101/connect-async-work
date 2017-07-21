@@ -32,7 +32,7 @@ class AsyncWork extends React.Component {
 
     // 'Initialized' work is either in the process of being resolved or already resolved.
     if (workInitialized === true) return;
-  
+
     // The async work not attached to `AsyncWork Class` since work may be dependent on a match params
     this.workPromise = new Promise((resolve, reject) => {
 
