@@ -1,8 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { createStore, combineReducers, applyMiddleware } from 'redux'
+import { createStore, compose, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
-import { ConnectedRouter as Router } from 'react-router-redux'
+// import { ConnectedRouter as Router } from 'react-router-redux'
+import { BrowserRouter as Router } from 'react-router-dom'
 import createHistory from 'history/createBrowserHistory'
 import { 
   middleware as asyncWorkMiddleware, reducer as asyncWorkReducer 
@@ -11,6 +12,9 @@ import {
 import * as reducers from './reducers'
 import { App } from './components'
 
+const devtools = typeof window === 'object' && window.devToolsExtension ?
+  window.devToolsExtension : (() => noop => noop);
+
 const history = createHistory()
 
 const reducer = combineReducers({
@@ -18,7 +22,16 @@ const reducer = combineReducers({
   ...reducers,
 })
 
-const store = createStore(reducer, applyMiddleware(asyncWorkMiddleware))
+// Add universal enhancers here
+let enhancers = [devtools()];
+
+const enhancer = compose(...[
+	applyMiddleware(asyncWorkMiddleware),
+	...enhancers
+]);
+
+
+const store = createStore(reducer, enhancer)
 
 ReactDOM.render(
   <Provider store={store}>

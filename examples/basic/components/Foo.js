@@ -6,6 +6,7 @@ import style from '../style'
 const work = [{ key: 'foo', work : () => delay(1600).then(() => 'foo work resolved')}]
 
 function Foo(props) {
+  console.log('Foo / render')
   return (
   	<div>
   		<h3>Foo Async Work</h3>

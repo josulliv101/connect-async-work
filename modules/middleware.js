@@ -11,7 +11,7 @@ export const middleware = store => next => action => {
     return next(action)
   }
   
-  const { work, asyncRender, callback } = action.meta;
+  const { work, asyncRender, callback, RootCmp } = action.meta;
 
   invariant(
     work,
@@ -27,14 +27,14 @@ export const middleware = store => next => action => {
     return next(action)
   }
   
-  console.log('middleware doing work', asyncRender, work)
+  // console.log('middleware doing work', asyncRender, work)
 
   // Don't update store in asyncRenders. All we care about is returning the promises.
   if (!asyncRender) {
 
     // Updates global state with each work item
     for (let i =0; i < work.length; i++) {
-      console.log('middleware init action');
+      console.log('middleware init action', work[i].key);
       next(asyncWorkInit(work[i].key));
     }
 
@@ -44,14 +44,17 @@ export const middleware = store => next => action => {
   
   return Promise.all(promises)
   .then(
-    results => handleSuccess(work, store, results, next, asyncWorkResolve),
-    error => handleError(work, store, error, next, asyncWorkError),
+    results => handleSuccess(RootCmp, work, store, results, next, asyncWorkResolve),
+    error => handleError(RootCmp, work, store, error, next, asyncWorkError),
   )
   .then(callback) // noop as default
 }
 
-function handleSuccess(work, store, results, next, asyncWorkResolve) {
-  
+function handleSuccess(RootCmp, work, store, results, next, asyncWorkResolve) {
+
+  // Want the done flag on Async Cmps already in place before store gets updated
+  RootCmp.asyncWorkResolved = true;
+
   for (let i =0; i < work.length; i++) {
     next(asyncWorkResolve(work[i].key, results[i]))
   }
@@ -59,7 +62,11 @@ function handleSuccess(work, store, results, next, asyncWorkResolve) {
   return ({work, results});
 }
 
-function handleError(work, store, error, next, asyncWorkError) {
+function handleError(RootCmp, work, store, error, next, asyncWorkError) {
+
+  // Want the done flag on Async Cmps already in place before store gets updated
+  RootCmp.asyncWorkResolved = true;
+  
   for (let i =0; i < work.length; i++) {
     next(asyncWorkError(work[i].key, error))
   }

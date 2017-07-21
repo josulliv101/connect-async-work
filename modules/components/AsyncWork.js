@@ -24,19 +24,38 @@ class AsyncWork extends React.Component {
     match: { params: {} },
   };
 
-  componentWillMount() {
-
-    const {dispatch, workInitialized, workItems} = this.props;
-    const {asyncRender} = this.context;
+  constructor(props, context) {
+    super(props, context);
+    console.log('AsyncWork / constructor')
+    const {dispatch, workInitialized, workItems, rootCmp} = props;
+    const {asyncRender} = context;
 
     // 'Initialized' work is either in the process of being resolved or already resolved.
     if (workInitialized === true) return;
-
+  
     // The async work not attached to `AsyncWork Class` since work may be dependent on a match params
     this.workPromise = new Promise((resolve, reject) => {
+
+      console.log('AsyncWork / constructor / Promise')
+
       // The middleware intercepts and handles creating actions for each work item which affects the store state
-      dispatch(asyncDoWork(workItems, asyncRender, (data) => resolve(data)));
+      dispatch(asyncDoWork(workItems, asyncRender, rootCmp, (data) => {
+        console.log('AsyncWork / constructor / Callback')
+        return resolve(data)
+      }))
     });
+  }
+  componentWillReceiveProps(nextProps, nextContext) {
+    console.log('AsyncWork / componentWillReceiveProps', this.props, nextProps)
+  }
+  componentWillMount() {
+    console.log('AsyncWork / componentWillMount', this.props)
+  }
+  componentWillUpdate() {
+    console.log('AsyncWork / componentWillUpdate')
+  }
+  componentDidUpdate() {
+    console.log('AsyncWork / componentDidUpdate')
   }
 
 /*  componentWillUnmount() {
@@ -50,7 +69,7 @@ class AsyncWork extends React.Component {
   }*/
 
   render() {
-
+    console.log('AsyncWork / render')
     // The propsToPass will contain the appropriate key for each item of
     // work... provided by the HOC which connects to the store
     const {children, workItems, ...propsToPass} = this.props;

@@ -27,15 +27,21 @@ export default function withAsyncWork(workItems = []) {
       };
     };
 
-    return connect(mapStateToProps)(({ workInitialized, workItems, ...props }) => (
+    const Enhanced = connect(mapStateToProps)(({ workInitialized, workItems, ...props }) => (
         <AsyncWork 
+          rootCmp={Enhanced}
           dispatch={props.dispatch}
+          keys={props.keys}
           workItems={workItems}
           workInitialized={workInitialized}>
           <WrappedComponent {...props} />
         </AsyncWork>
       )
     )
+
+    Enhanced.asyncWork = true
+
+    return Enhanced
   }
 }
 

@@ -4,11 +4,12 @@ import { increase, decrease } from '../actions/count'
 import style from '../style'
 
 function Home({ number, increase, decrease }) {
+  console.log('Home / render')
   return (
     <div>
       <h3>Home</h3>
-      <div style={style.center}>
-        <em>Hint: all the routes except 'Home' have async work.</em>
+      <div>
+        <em>All routes except 'Home' have async work.</em>
       </div>
     </div>
   )

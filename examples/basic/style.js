@@ -16,10 +16,12 @@ const style = {
     margin: 0,
     padding: gutter * 2,
     listStyle: 'none',
-    minWidth: 120,
-    minHeight: 360,
+    minWidth: 200,
+    minHeight: 440,
   },
   bd: {
+    width: '100%',
+    position: 'relative',
     padding: `${gutter*1}px ${gutter*5}px`,
   },
   center: {
@@ -30,10 +32,8 @@ const style = {
   },
   status: {
     position: 'absolute',
-    width: '100%',
-    top: gutter * 3,
-    fontSize: 14,
-    color: 'rgba(0,0,0,.7)',
+    top: 0,
+    right: gutter * 2,
   },
   controls: {
     position: 'relative',
