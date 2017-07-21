@@ -25,6 +25,17 @@
   "peerDependencies": {
     "react": "^16"
   },
+  "keywords": [
+    "redux",
+    "redux-saga",
+    "react",
+    "react-router",
+    "router",
+    "route",
+    "routing",
+    "connect",
+    "async"
+  ],
   "dependencies": {
     "babel-runtime": "^6.23.0",
     "history": "^4.6.0",

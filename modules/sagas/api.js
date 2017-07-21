@@ -17,7 +17,7 @@ function* asyncWorker(action) {
       yield put(asyncWorkInit(work[i].key));
     }
   }
-  
+
   try {
 
     const workPromises = work.map(item => item.work()) 
@@ -28,9 +28,9 @@ function* asyncWorker(action) {
     for (let i =0; i < work.length; i++) {
       yield put(asyncWorkResolve(work[i].key, results[i]));
     }
-    
+
     if (callback) callback(results)
-      
+
 /*    const { cancelled, results } = yield race({
       results: call(client[reqType], endPoint),
       cancelled: take(fetchCancel)
@@ -42,6 +42,7 @@ function* asyncWorker(action) {
   }
 
   catch(error) {
+    RootCmp.asyncWorkResolved = true;
     console.log('catch error', error)
     yield put(asyncWorkError(error))
   } 
