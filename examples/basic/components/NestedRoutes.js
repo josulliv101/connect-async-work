@@ -35,12 +35,12 @@ class NestedRoutes extends Component {
         <div style={{marginLeft: 32}}>
           loc: {this.props.location && this.props.location.pathname}
           
-          <AsyncSwitch 
+          <Switch 
             location={this.props.location} 
-            nested={true}
+            // nested={true}
           >
             {routes.filter(route => !!route.component).map(({match, label, ...route}) => <Route key={route.path} {...route}  />) } 
-          </AsyncSwitch>   
+          </Switch>   
         </div>
       </div>
     )    
@@ -53,7 +53,7 @@ const work2 = [
   { key: 'nestedChildFoo', work : () => delay(4600).then(() => 'nested Child Route Foo work resolved') }
 ]
 
-var NestedRoutesFoo = (
+var NestedRoutesFoo = withAsyncWork(work2)(
   
   function Child(props) {
     console.log('NestedRoutesFoo render', props)
