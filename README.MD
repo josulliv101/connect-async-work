@@ -2,15 +2,6 @@
 
 ### Experimental & Under Development.
 
-Installation
-------------
-
-```sh
-npm install react-router
-# or
-bower install react-router
-```
-
 #### Goals (still in progress)
 - Work with react-router v4
 - Work with typical redux middleware/redux-saga middleware
@@ -18,4 +9,14 @@ bower install react-router
 - Delay router transitions or be able to display 'is loading' cmp
 - Work on server side
 - Nested async routes
+
+Run Examples
+------------
+
+```sh
+npm install
+cd examples/basic
+npm install
+npm start
+```
 
