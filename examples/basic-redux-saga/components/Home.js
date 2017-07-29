@@ -1,9 +1,6 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { increase, decrease } from '../actions/count'
-import style from '../style'
 
-function Home({ number, increase, decrease }) {
+function Home() {
   console.log('Home / render')
   return (
     <div>
@@ -15,7 +12,4 @@ function Home({ number, increase, decrease }) {
   )
 }
 
-export default connect(
-  state => ({ number: state.count.number }),
-  { increase, decrease }
-)(Home)
+export default Home

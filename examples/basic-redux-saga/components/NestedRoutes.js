@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link, Route, Switch, withRouter } from 'react-router-dom'
-import { withAsyncWork, AsyncSwitch } from '@josulliv101/connect-async-work'
+import { withAsyncWork } from '@josulliv101/connect-async-work'
 import { delay } from '../utils'
-import style from '../style'
+import style from '../style/'
 
 const work = [
 	{ key: 'nestedRoutesParent', work : () => delay(1600).then(() => 'nestedRoutesParent work resolved') }
@@ -34,11 +34,7 @@ class NestedRoutes extends Component {
         </ul>
         <div style={{marginLeft: 32}}>
           loc: {this.props.location && this.props.location.pathname}
-          
-          <Switch 
-            location={this.props.location} 
-            // nested={true}
-          >
+          <Switch >
             {routes.filter(route => !!route.component).map(({match, label, ...route}) => <Route key={route.path} {...route}  />) } 
           </Switch>   
         </div>

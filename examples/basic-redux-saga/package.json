@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "dependencies": {
-    "@josulliv101/connect-async-work": "^1.2.0",
+    "@josulliv101/connect-async-work": "latest",
+    "@josulliv101/delay-route": "^0.0.1",
+    "axios": "^0.16.2",
     "babel-runtime": "^6.23.0",
     "history": "^4.6.3",
     "react": "16.0.0-alpha.3",
@@ -33,6 +35,6 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "start": "webpack-dev-server --history-api-fallback --no-info --open"
+    "start": "NODE_ENV=development webpack-dev-server --history-api-fallback --no-info --open"
   }
 }

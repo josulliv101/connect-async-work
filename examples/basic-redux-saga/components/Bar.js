@@ -1,7 +1,7 @@
 import React from 'react'
 import { withAsyncWork } from '@josulliv101/connect-async-work'
 import { delay } from '../utils'
-import style from '../style'
+import style from '../style/'
 
 const work = [{ key: 'bar', work : () => delay(2600).then(() => 'bar work resolved')}]
 

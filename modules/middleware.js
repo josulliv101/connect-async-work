@@ -1,59 +1,48 @@
 import invariant from 'invariant'
 
-import { asyncDoWork, asyncWorkInit, asyncWorkResolve, asyncWorkError } from './store'
+import { asyncDoWork, asyncWorkInit, asyncWorkResolve, asyncWorkCancel, asyncWorkError } from './store'
 
+let cancelIds = []
 
 const ASYNC_DO_WORK = asyncDoWork().type
 
 export const middleware = store => next => action => {
+  
+  const id = action.meta && action.meta.id
+
+  if (action.type !== ASYNC_DO_WORK && !cancelIds.includes(action.type)) {
+    return next(action)
+  }
+
+  const { work, asyncRender, promises, callback, RootCmp } = action.meta || {};
+  
+  if (action.type === ASYNC_DO_WORK && !work) {
+    return next(action)
+  }
 
   if (action.type !== ASYNC_DO_WORK) {
+    const {promises} = action.meta
+    
+    // Call the cancel method attached to any of the promises.
+    promises.forEach(p => p['CANCEL'] && p['CANCEL']())
     return next(action)
   }
-  
-  const { work, asyncRender, callback, RootCmp } = action.meta;
 
-  invariant(
-    work,
-    `There isn't any work associated with the ${ASYNC_DO_WORK} action.`
+  console.log('cancelIds', cancelIds, id);
+
+  // Add the id to the cancel array
+  cancelIds = cancelIds.concat([id])
+
+  Promise.all(promises).then(
+    results => handleSuccess(work, store, results, next, asyncWorkResolve),
+    error => handleError(work, store, error, next, asyncWorkError),
   )
 
-  invariant(
-    callback,
-    `There isn't a callback associated with the ${ASYNC_DO_WORK} action.`
-  )
-  
-  if (!work) {
-    return next(action)
-  }
-  
-  // console.log('middleware doing work', asyncRender, work)
-
-  // Don't update store in asyncRenders. All we care about is returning the promises.
-  if (!asyncRender) {
-
-    // Updates global state with each work item
-    for (let i =0; i < work.length; i++) {
-      console.log('middleware init action', work[i].key);
-      next(asyncWorkInit(work[i].key));
-    }
-
-  }
-
-  const promises = work.map(item => item.work())
-  
-  return Promise.all(promises)
-  .then(
-    results => handleSuccess(RootCmp, work, store, results, next, asyncWorkResolve),
-    error => handleError(RootCmp, work, store, error, next, asyncWorkError),
-  )
-  .then(callback) // noop as default
+  return next(action)
 }
 
-function handleSuccess(RootCmp, work, store, results, next, asyncWorkResolve) {
+function handleSuccess(work, store, results, next, asyncWorkResolve) {
 
-  // Want the done flag on Async Cmps already in place before store gets updated
-  RootCmp.asyncWorkResolved = true;
 
   for (let i =0; i < work.length; i++) {
     next(asyncWorkResolve(work[i].key, results[i]))
@@ -62,11 +51,16 @@ function handleSuccess(RootCmp, work, store, results, next, asyncWorkResolve) {
   return ({work, results});
 }
 
-function handleError(RootCmp, work, store, error, next, asyncWorkError) {
+function handleError(work, store, error, next, asyncWorkError) {
 
-  // Want the done flag on Async Cmps already in place before store gets updated
-  RootCmp.asyncWorkResolved = true;
-  
+  if (error.message === 'React Component unmounted before async work resolved.') {
+    for (let i =0; i < work.length; i++) {
+      console.log('middleware cancel action', work[i].key);
+      next(asyncWorkCancel(work[i].key));
+    }
+    return 
+  }
+
   for (let i =0; i < work.length; i++) {
     next(asyncWorkError(work[i].key, error))
   }

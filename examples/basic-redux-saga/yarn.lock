@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@josulliv101/connect-async-work@^1.2.0":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@josulliv101/connect-async-work/-/connect-async-work-1.2.1.tgz#8de5da5e0ae183442159590a081d5abc60965319"
+"@josulliv101/connect-async-work@latest":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@josulliv101/connect-async-work/-/connect-async-work-1.2.2.tgz#db07f26f4435859501278c2ba3678ce959c0c299"
   dependencies:
     history "^4.6.0"
     hoist-non-react-statics "^1.2.0"
@@ -16,6 +16,17 @@
     react-router "^4.1.1"
     recompose "^0.24.0"
     redux-actions "^2.1.0"
+    redux-saga "^0.15.5"
+
+"@josulliv101/delay-route@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@josulliv101/delay-route/-/delay-route-0.0.1.tgz#82ea6a4c7ae6a80bbfeed9042c85f5554d825a71"
+  dependencies:
+    invariant "^2.2.2"
+    loose-envify "^1.3.1"
+    prop-types "^15.5.4"
+    react-router "^4.1.2"
+    warning "^3.0.0"
 
 abbrev@1:
   version "1.1.0"
@@ -172,6 +183,13 @@ aws-sign2@~0.6.0:
 aws4@^1.2.1:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.6.0.tgz#83ef5ca860b2b32e4a0deedee8c771b9db57471e"
+
+axios@^0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.16.2.tgz#ba4f92f17167dfbab40983785454b9ac149c3c6d"
+  dependencies:
+    follow-redirects "^1.2.3"
+    is-buffer "^1.1.5"
 
 babel-code-frame@^6.22.0:
   version "6.22.0"
@@ -1168,7 +1186,7 @@ debug@2.6.7:
   dependencies:
     ms "2.0.0"
 
-debug@2.6.8, debug@^2.1.1, debug@^2.2.0, debug@^2.6.6:
+debug@2.6.8, debug@^2.1.1, debug@^2.2.0, debug@^2.4.5, debug@^2.6.6:
   version "2.6.8"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.8.tgz#e731531ca2ede27d188222427da17821d68ff4fc"
   dependencies:
@@ -1594,6 +1612,12 @@ flat-cache@^1.2.1:
     del "^2.0.2"
     graceful-fs "^4.1.2"
     write "^0.2.1"
+
+follow-redirects@^1.2.3:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.2.4.tgz#355e8f4d16876b43f577b0d5ce2668b9723214ea"
+  dependencies:
+    debug "^2.4.5"
 
 for-in@^1.0.1:
   version "1.0.2"
@@ -2885,7 +2909,7 @@ react-router-redux@^5.0.0-alpha.6:
     prop-types "^15.5.4"
     react-router "^4.1.1"
 
-react-router@^4.1.1:
+react-router@^4.1.1, react-router@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/react-router/-/react-router-4.1.2.tgz#7ae027341abc42eb08ad9f7a8cac08d0563672ce"
   dependencies:
@@ -2996,6 +3020,10 @@ redux-devtools@^3.1.0:
     lodash "^4.2.0"
     prop-types "^15.5.7"
     redux-devtools-instrument "^1.0.1"
+
+redux-saga@^0.15.5:
+  version "0.15.5"
+  resolved "https://registry.yarnpkg.com/redux-saga/-/redux-saga-0.15.5.tgz#1fca7e514b00cfbb7c3453ed870f253749635f0f"
 
 redux@^3.6.0:
   version "3.7.2"

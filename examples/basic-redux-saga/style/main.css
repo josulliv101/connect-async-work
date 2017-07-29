@@ -1,6 +1,9 @@
 .async-switch > div:first-child {
   display: none;
 }
+.delay-route > div:nth-child(3) {
+  /*display: none;*/
+}
 .loader,
 .loader:after {
   border-radius: 50%;

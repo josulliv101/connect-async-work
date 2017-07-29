@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import hoistNonReactStatic from 'hoist-non-react-statics';
 
 import AsyncWork from './AsyncWork'
 import { workState, loadState } from '../store'
@@ -19,11 +20,12 @@ export default function withAsyncWork(workItems = []) {
       return {
         keys,
         loading: keys.some(key => loadState(state)[key] && loadState(state)[key].loading),
+        loaded: keys.every(key => loadState(state)[key] && loadState(state)[key].loaded),
         workItems,
         ...workKeys,
         // The only way its key would exist is if it has already been initialized.
         // It could possibly already exist if loaded and cancelled, or in process of loading.
-        workInitialized: keys.every(key => !!workState(state)[key])
+        doWorkCalled: keys.every(key => loadState(state)[key] && (loadState(state)[key].loaded || loadState(state)[key].loading))
       };
     };
 
@@ -31,16 +33,19 @@ export default function withAsyncWork(workItems = []) {
         <AsyncWork 
           rootCmp={Enhanced}
           dispatch={props.dispatch}
+          doWorkCalled={props.doWorkCalled}
           keys={props.keys}
-          workItems={workItems}
-          workInitialized={workInitialized}>
+          loaded={props.loaded}
+          loading={props.loading}
+          // Pass on a copy of work items where any work item <func>keys are swapped for <string>keys
+          workItems={workItems.map((item, i) => ({ key: props.keys[i], work: item.work }))}>
           <WrappedComponent {...props} />
         </AsyncWork>
       )
     )
 
     Enhanced.asyncWork = true
-
+    hoistNonReactStatic(Enhanced, AsyncWork);
     return Enhanced
   }
 }

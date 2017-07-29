@@ -3,14 +3,8 @@ import sinon, { spy } from 'sinon'
 import { mount, render } from 'enzyme'
 
 import React from 'react'
-import PropTypes from 'prop-types'
 
-// import { Provider, connect } from 'react-redux';
-// import watch from 'redux-watch'
-
-// import { asyncWork } from '../middleware'
 import AsyncWork from '../../components/AsyncWork'
-// import { reducer, asyncWorkCancel, asyncWorkInit, BASE } from '../store';
 
 describe('<AsyncWork />', () => {
   
@@ -26,26 +20,17 @@ describe('<AsyncWork />', () => {
     });
 
     afterEach(function () {
-      AsyncWork.workPromise = null;
+
     });
     
-    describe('componentWillMount', () => {
+    describe('Constructor', () => {
 
-      it('dispatches \'do work\' action when work is uninitialized (the default)', () => {
-        const wrapper = mount(<AsyncWork dispatch={sinon.spy()} />)
-        const cmp = wrapper.find(AsyncWork)
-        expect(cmp.props().dispatch.calledOnce).toBe(true);
-      })
-
-      it('does not dispatch \'do work\' action when work is initialized', () => {
-        const wrapper = mount(<AsyncWork workInitialized={true} dispatch={sinon.spy()} />)
-        const cmp = wrapper.find(AsyncWork)
-        expect(cmp.props().dispatch.notCalled).toBe(true);
-      })
-
-      it('adds a promise to the instance when initializing work', () => {
-        const {node} = mount(<AsyncWork />)
-        expect(node.workPromise[Symbol.toStringTag]).toBe('Promise');
+      it('adds <Array>promises of work to the instance', () => {
+        const workItems= [{key: 'foo', work: () => Promise.resolve()}]
+        const {node} = mount(<AsyncWork workItems={workItems} dispatch={noop => noop} />)
+        expect(Array.isArray(node.workPromises)).toBe(true);
+        expect(node.workPromises.length).toBe(1);
+        expect(node.workPromises[0] instanceof Promise).toBe(true);
       })
 
     });
@@ -53,25 +38,26 @@ describe('<AsyncWork />', () => {
   });
 
   describe('Render', () => {
+
     it('throws an error if multiple children found', () => {
       expect(function() {
         mount(
-          <AsyncWork>
+          <AsyncWork dispatch={noop => noop}>
             <div />
             <div />
           </AsyncWork>
         )
-      }).toThrow(/expected to receive a single React element child/)
+      }).toThrow()
     })
 
-    it('wraps the wrapped cmp with a AsyncWork tag when asyncRender context is true', () => {
+    it('wraps the rendered elements with a AsyncWork tag when asyncRender context is true', () => {
       const wrapper = mount(
-        <AsyncWork>
+        <AsyncWork dispatch={noop => noop}>
           <div />
         </AsyncWork>
       )
       const wrapperAsyncRender = mount(
-        <AsyncWork>
+        <AsyncWork dispatch={noop => noop}>
           <div></div>
         </AsyncWork>,
         { context }
@@ -79,207 +65,48 @@ describe('<AsyncWork />', () => {
       expect(wrapper.html()).toBe('<div></div>');
       expect(wrapperAsyncRender.html()).toMatch(/^<AsyncWork/i);
     })
+
   });
 
-/*
-  describe('Render', () => {
+  describe('Actions', () => {
 
-    it('renders the wrapped component', () => {
-      
-      const store = createStore(reducers)
-
-      const wrapper = mount(
-        <Provider store={store} key="provider">
-          <AsyncWork WrappedComponent={() => <div>foo</div>} />
-        </Provider>
-      );
-
-      expect(wrapper.text()).toBe("foo")
+    it('dispatches WORK DO action when doWorkCalled is false (the default)', () => {
+      const spy = sinon.spy();
+      const wrapper = mount(<AsyncWork dispatch={spy} />)
+      expect(spy.calledOnce).toBe(true);
     })
 
-    it('is in loading state when first mounted', () => {
-      
-      const store = createStore(reducers)
-
-      const wrapper = mount(
-        <Provider store={store} key="provider">
-          <AsyncWork asyncWorkKey="foo-123" WrappedComponent={(props) => <div>{props.loading ? 'loading' : '...'}</div>} />
-        </Provider>
-      );
-
-      expect(wrapper.text()).toBe("loading")
+    it('does not dispatch WORK DO action when work already requested', () => {
+      const spy = sinon.spy();
+      const wrapper = mount(<AsyncWork doWorkCalled={true} dispatch={spy} />)
+      expect(spy.notCalled).toBe(true);
     })
 
-    it('creates prop for the specified key', () => {
-      
-      const store = createStore(reducers)
-
-      const wrapper = mount(
-        <Provider store={store} key="provider">
-          <AsyncWork 
-            asyncWorkKey="foo" 
-            WrappedComponent={ ({ foo }) => <div>{ foo === null ? 'exists' : '...' }</div> } 
-          />
-        </Provider>
-      );
-
-      expect(wrapper.text()).toBe("exists")
-
+    it('creates a uid for each WORK DO action', () => {
+      const spy = sinon.spy();
+      const wrapper = mount(<AsyncWork dispatch={spy} />)
+      expect(spy.getCall(0).args[0].type).toBe('@async-work/DO_WORK');
+      expect(spy.getCall(0).args[0].meta.id).toExist();
     })
 
-    it('populates the specified key with correct data from global state', () => {
+    it('will dispatch a WORK CANCEL action (id created from "do work" action) if loading on unmount', () => {
       
-      const id = "fooWithData"
-      const store = createStore(reducers, { [BASE]: { loadState: { [id]: { loading: false, loaded: true }}, work: { [id]: "foo with data" }}})
-
+      const spy = sinon.spy();
       const wrapper = mount(
-        <Provider store={store} key="provider">
-          <AsyncWork 
-            asyncWorkKey={id}
-            WrappedComponent={ (props) => <div>{ props.fooWithData }</div> } 
-          />
-        </Provider>
-      );
-
-      expect(wrapper.text()).toBe("foo with data")
-
-    })
-
-  });*/
-
-/*  describe('Actions', () => {
-
-    it('calls INIT action on mount', () => {
-      
-      const store = createStore(reducers)
-      const proto = AsyncWork.prototype;
-
-      spy(store, 'dispatch');
-      spy(proto, 'componentWillMount');
-
-      const wrapper = mount(
-        <Provider store={store} key="provider">
-          <AsyncWork 
-            asyncWorkKey="foo-load" 
-            WrappedComponent={() => <div />} 
-          />
-        </Provider>
-      );
-      
-      expect(store.dispatch.calledOnce).toBe(true);
-      expect(store.dispatch.getCall(0).args[0]).toEqual(asyncWorkInit("foo-load"));
-      expect(proto.componentWillMount.calledOnce).toBe(true);
-
-      store.dispatch.restore();
-      proto.componentWillMount.restore();
-    })
-
-    it('does not INIT async work if already loaded', () => {
-      
-      const store = createStore(reducers, {asyncWork: {loadState: {'foo-do-not-load': {loading: false, loaded: true}}}})
-      const proto = AsyncWork.prototype;
-
-      spy(store, 'dispatch');
-      spy(proto, 'componentWillMount');
-
-      const wrapper = mount(
-        <Provider store={store} key="provider">
-          <AsyncWork 
-            asyncWorkKey="foo-do-not-load" 
-            WrappedComponent={() => <div />} 
-          />
-        </Provider>
-      );
-      
-      expect(store.dispatch.called).toBe(false);
-      expect(proto.componentWillMount.calledOnce).toBe(true);
-
-      store.dispatch.restore();
-      proto.componentWillMount.restore();
-    })
-
-    it('does not INIT async work if in process of loading', () => {
-      
-      const store = createStore(reducers, {asyncWork: {loadState: {'foo-do-not-load': {loading: true, loaded: false}}}})
-      const proto = AsyncWork.prototype;
-
-      spy(store, 'dispatch');
-      spy(proto, 'componentWillMount');
-
-      const wrapper = mount(
-        <Provider store={store} key="provider">
-          <AsyncWork 
-            asyncWorkKey="foo-do-not-load" 
-            WrappedComponent={() => <div />} 
-          />
-        </Provider>
-      );
-      
-      expect(store.dispatch.called).toBe(false);
-      expect(proto.componentWillMount.calledOnce).toBe(true);
-
-      store.dispatch.restore();
-      proto.componentWillMount.restore();
-    })
-
-
-    it('sends work off to be started in the INIT action', () => {
-      
-      const store = createStore(reducers)
-      const work = [{ foo: 'I am work' }]
-
-      const proto = AsyncWork.prototype;
-
-      spy(store, 'dispatch');
-      spy(proto, 'componentWillMount');
-
-      const wrapper = mount(
-        <Provider store={store} key="provider">
-          <AsyncWork 
-            asyncWorkKey="fooWork" 
-            asyncWorkItems={ work }
-            WrappedComponent={() => <div />} 
-          />
-        </Provider>
-      );
-
-      expect(store.dispatch.calledOnce).toBe(true);
-      expect(store.dispatch.getCall(0).args[0]).toEqual(asyncWorkInit("fooWork", work));
-      expect(proto.componentWillMount.calledOnce).toBe(true);
-
-      store.dispatch.restore();
-      proto.componentWillMount.restore();
-
-    })
-
-    it('will dispatch a CANCEL action if loading on unmount', () => {
-      
-      const store = createStore(reducers, {asyncWork: {loadState: {'foo-cancel': {loading: true, loaded: false}}}})
-      const proto = AsyncWork.prototype;
-
-      spy(store, 'dispatch');
-      spy(proto, 'componentWillUnmount');
-
-      const wrapper = mount(
-        <Provider store={store} key="provider">
-          <AsyncWork 
-            asyncWorkKey="foo-cancel" 
-            WrappedComponent={() => <div />} 
-          />
-        </Provider>
+        <AsyncWork dispatch={spy} />
       );
 
       wrapper.unmount();
       
-      expect(store.dispatch.calledOnce).toBe(true);
-      expect(store.dispatch.getCall(0).args[0]).toEqual(asyncWorkCancel("foo-cancel"));
-      expect(proto.componentWillUnmount.calledOnce).toBe(true);
+      const id = spy.getCall(0).args[0].meta.id;
+      const idDispatched = spy.getCall(1).args[0].type;
 
-      store.dispatch.restore();
-      proto.componentWillUnmount.restore();
+      expect(spy.calledTwice).toBe(true);
+      expect(idDispatched).toEqual(id);
+
     })
 
-  });*/
+  });
 /*
   describe('Middleware', () => {
 

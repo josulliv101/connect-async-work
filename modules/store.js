@@ -1,9 +1,10 @@
+import uuidv4 from 'uuid/v4'
 import { createAction, handleActions } from 'redux-actions';
 
 function noop() {}
 
 // Middleware handles how work should translate into actions that update the store
-export const asyncDoWork = createAction('@async-work/DO_WORK', key => ({ key }), (work = [], asyncRender = false, RootCmp, callback = noop) => ({ work, asyncRender, RootCmp, callback }));
+export const asyncDoWork = createAction('@async-work/DO_WORK', key => ({ key }), (work = [], promises = [], asyncRender = false, callback = noop, id = uuidv4()) => ({ id, promises, work, asyncRender, callback, cancel: () => ({ type: id, meta: { promises } }) }));
 export const asyncWorkInit = createAction('@async-work/INIT', key => ({ key }), (key, work = []) => ({ key, work }));
 export const asyncWorkResolve = createAction('@async-work/RESOLVE', (key, data) => ({ key, data }), (key) => ({ key }));
 export const asyncWorkCancel = createAction('@async-work/CANCEL', key => ({ key }));
@@ -45,7 +46,14 @@ export function workState(globalState) {
 
 export const reducer = handleActions({
 
-  [asyncWorkInit]: (state, {payload: { key }}) => ({
+  [asyncDoWork]: (state, {meta: { work }}) => ({
+    ...state,
+    loadState: {
+      ...state.loadState,
+      ...(work.reduce((o, item) => (o[item.key] = {loading: true, loaded: false}) && o, {})),
+    },
+  }),
+/*  [asyncWorkInit]: (state, {payload: { key }}) => ({
     ...state,
     loadState: {
       ...state.loadState,
@@ -54,7 +62,7 @@ export const reducer = handleActions({
         loaded: false,
       },
     },
-  }),
+  }),*/
   [asyncWorkResolve]: (state, {payload: { key, data }}) => ({
     ...state,
     loadState: {
@@ -88,6 +96,7 @@ export const reducer = handleActions({
       [key]: {
         loading: false,
         loaded: false,
+        canceled: true,
       },
     },
   }),

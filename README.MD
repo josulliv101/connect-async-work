@@ -9,7 +9,6 @@ React version: 16.0.0-alpha.3
 - Delay router transitions or be able to display 'is loading' cmp
 - Work with typical redux middleware/redux-saga middleware
 - Be able to cancel requests
-- Work on server side
 - Nested async routes
 
 Run Basic Example

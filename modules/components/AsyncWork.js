@@ -7,66 +7,58 @@ import { asyncDoWork, asyncWorkCancel } from '../store'
 class AsyncWork extends React.Component {
 
   static propTypes = {
-    keys: PropTypes.arrayOf(PropTypes.string),
-    workItems: PropTypes.arrayOf(PropTypes.object),
     children: PropTypes.node,
+    doWorkCalled: PropTypes.bool,
+    keys: PropTypes.arrayOf(PropTypes.string),
     loading: PropTypes.bool, // True if any async work is unresolved for each component
-    match: PropTypes.object, // Most likely provided by a Route
-    workInitialized: PropTypes.bool,
+    workItems: PropTypes.arrayOf(PropTypes.object),
   };
-  
+
   static contextTypes = { 
     asyncRender: PropTypes.bool,
   };
 
   static defaultProps = {
     workItems: [],
-    match: { params: {} },
   };
 
   constructor(props, context) {
+
     super(props, context);
     console.log('AsyncWork / constructor')
-    const {dispatch, workInitialized, workItems, rootCmp} = props;
+    const {dispatch, doWorkCalled, workItems, rootCmp} = props;
     const {asyncRender} = context;
+    let promises;
 
-    // 'Initialized' work is either in the process of being resolved or already resolved.
-    if (workInitialized === true) return;
+    // This info maps to redux store
+    if (doWorkCalled === true) return;
+    
+    promises = workItems.map(item => item.work())
+    
 
-    // The async work not attached to `AsyncWork Class` since work may be dependent on a match params
-    this.workPromise = new Promise((resolve, reject) => {
+    this.action = asyncDoWork(workItems, promises, asyncRender)
+    this.workPromises = this.action.meta.promises
 
-      console.log('AsyncWork / constructor / Promise')
-
-      // The middleware intercepts and handles creating actions for each work item which affects the store state
-      dispatch(asyncDoWork(workItems, asyncRender, rootCmp, (data) => {
-        console.log('AsyncWork / constructor / Callback')
-        return resolve(data)
-      }))
-    });
-  }
-  componentWillReceiveProps(nextProps, nextContext) {
-    console.log('AsyncWork / componentWillReceiveProps', this.props, nextProps)
-  }
-  componentWillMount() {
-    console.log('AsyncWork / componentWillMount', this.props)
-  }
-  componentWillUpdate() {
-    console.log('AsyncWork / componentWillUpdate')
-  }
-  componentDidUpdate() {
-    console.log('AsyncWork / componentDidUpdate')
-  }
-
-/*  componentWillUnmount() {
-    const { props: { asyncWorkItems: work }, key, context: { store } } = this;
-    for (let i=0; i<work.length; i++) {
-      const key = work[i].key;
-      if (this.isLoading(key)) {
-        store.dispatch(asyncWorkCancel(key))
-      }
+    // Can return promise here from dispatch via middleware
+    if (asyncRender !== true) {
+      dispatch(this.action)
+      this.cancelDoWork = this.action.meta.cancel
     }
-  }*/
+  }
+
+  componentWillUnmount() {
+    
+    const { dispatch, loaded } = this.props;
+
+    console.log('AsyncWork componentWillUnmount - all loaded %s', loaded)
+    
+    // No need to cancel if everything is loaded.
+    if (loaded === true) return
+
+    if (this.cancelDoWork) {
+      dispatch(this.cancelDoWork())
+    }
+  }
 
   render() {
     console.log('AsyncWork / render')
@@ -78,7 +70,7 @@ class AsyncWork extends React.Component {
     const ChildComponent = children ? React.Children.only(children) : null;
 
     // The `is` prop avoids a warning about needing lowercase elements.
-    const elementProps = { is: 'AsyncWork', promise: this.workPromise };
+    const elementProps = { is: 'AsyncWork', promise: this.workPromises };
 
     // Wrap the ChildComponent in an AsyncWork tag when doing async render.
     // This gives the renderer access to the promise object on the instance.

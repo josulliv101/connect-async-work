@@ -26,15 +26,13 @@
     "react": "^16"
   },
   "keywords": [
-    "redux",
-    "redux-saga",
+    "async",
+    "connect",
     "react",
     "react-router",
-    "router",
-    "route",
-    "routing",
-    "connect",
-    "async"
+    "redux",
+    "redux-saga",
+    "v4"
   ],
   "dependencies": {
     "babel-runtime": "^6.23.0",
@@ -48,7 +46,8 @@
     "react-router": "^4.1.1",
     "recompose": "^0.24.0",
     "redux-actions": "^2.1.0",
-    "redux-saga": "^0.15.5"
+    "redux-saga": "^0.15.5",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

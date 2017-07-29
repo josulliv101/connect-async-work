@@ -9,14 +9,28 @@ import withAsyncWork from '../../components/withAsyncWork'
 
 describe('withAsyncWork HOC', () => {
 
-  // Keys in async store
-  const foo = 'foo data'
-  const bar = null
-  const foo123 = 'foo123 created by fn'
-
   const context = { 
-      store: { getState: () => ({ asyncwork: { work: { foo, bar, foo123 }, loadState: {}}}), dispatch: noop => noop, subscribe: noop => noop },
+      store: { 
+        getState: () => ({ 
+          asyncwork: { 
+            work: { 
+              foo: 'foo data',
+              bar: null,
+              foo123: 'foo123 created by fn',
+            }, 
+            loadState: { 
+              foo: {
+                loaded: true, 
+                loading: false,
+              }
+            }
+          }
+        }), 
+        dispatch: noop => noop, 
+        subscribe: noop => noop 
+      },
   }
+
   const work = () => Promise.resolve('done');
   const workResolved = [{ key: 'foo', work }]
   const workResolvedFnKey = [{ key: (match) => `foo${match.params.id}`, work }]
@@ -25,14 +39,17 @@ describe('withAsyncWork HOC', () => {
 
   describe('Props', () => {
 
-    it('correctly passes the work keys on to <Enhanced/>', () => {
-      const Enhanced = withAsyncWork(workResolved)(({keys}) => <div>{`${keys[0]} / length of ${keys.length}`}</div>)
+    it('passes the work keys on to <Enhanced/>', () => {
+      const FooCmp = ({keys}) => <div>{`${keys[0]} / length of ${keys.length}`}</div>
+      const Enhanced = withAsyncWork(workResolved)(FooCmp)
       const wrapper = mount(<Enhanced />, { context })
       expect(wrapper.text()).toBe('foo / length of 1')
     })
 
-    // For example, the second work item will always match the second key in the prop's array of keys 
+
     it('respects the order of work keys passed on to wrapped cmp', () => {
+
+      // For example, the second work item will always match the second key in the prop's array of keys 
 
       const Enhanced = withAsyncWork(workMulti)(MockWrappedCmp)
       const wrapper = mount(<Enhanced />, { context })
@@ -46,26 +63,20 @@ describe('withAsyncWork HOC', () => {
       }
     })
 
-    it('correctly indicates that work has not been initialized', () => {
+    it('indicates that work has not been requested', () => {
       
       const Enhanced = withAsyncWork(workUninitialized)(props => <div/>)
-      const wrapper = mount(
-        <Enhanced />,
-        { context }
-      );
-      const cmp = wrapper.find(AsyncWork)
-      expect(cmp.props().workInitialized).toBe(false)
+      const wrapper = mount(<Enhanced />, { context });
+      const props = wrapper.find(AsyncWork).props()
+      expect(props.doWorkCalled).toBe(false)
     })
 
-    it('correctly indicates that work has been initialized', () => {
+    it('indicates that work has been requested', () => {
       
       const Enhanced = withAsyncWork(workResolved)(props => <div/>)
-      const wrapper = mount(
-        <Enhanced />,
-        { context }
-      );
-      const cmp = wrapper.find(AsyncWork)
-      expect(cmp.props().workInitialized).toBe(true)
+      const wrapper = mount(<Enhanced />, { context });
+      const props = wrapper.find(AsyncWork).props()
+      expect(props.doWorkCalled).toBe(true)
     })
 
     it('passes the work items <string>keys as props to <Enhanced />', () => {
@@ -94,7 +105,7 @@ describe('withAsyncWork HOC', () => {
 
     it('has custom props passed down to Wrapped Component', () => {
         
-      const Enhanced = withAsyncWork([/* no work */])(props => <div>{props.customProp}</div>)
+      const Enhanced = withAsyncWork([])(props => <div>{props.customProp}</div>)
       const wrapper = mount(
         <Enhanced customProp="bar" />,
         { context }
