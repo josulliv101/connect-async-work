@@ -111,20 +111,22 @@ const AsyncWorkRendererFiber = ReactFiberReconciler({
 });
 
 const emptyObject = {};
-const defaultContainer = { type: "CONTAINER", promises: [], children: [] };
+
 const AsyncWorkRenderer = {
-  
+
   renderToString(element, options = {}, callback) {
 
     const toString = options.static ? renderToStaticMarkup : renderToString;
-    const promises = AsyncWorkRenderer.renderToPromises(element)
+    const promises = AsyncWorkRenderer.renderToPromises(element) || []
     
-    return new Promise((resolve, reject) => {
-      return Promise.all(promises).then(() => resolve(toString(element)))
-    })
+    // return new Promise((resolve, reject) => {
+      return Promise.all(promises).then(() => toString(element))
+    // })
 
   },
   renderToPromises(element, options = {}, callback) {
+    
+    const defaultContainer = { type: "CONTAINER", promises: [], children: [] };
 
     const root = AsyncWorkRendererFiber.createContainer(
       Object.assign(defaultContainer, options)
@@ -134,7 +136,7 @@ const AsyncWorkRenderer = {
     const update = () => AsyncWorkRendererFiber.updateContainer(<Provider>{element}</Provider>, root, null, null)
 
     AsyncWorkRendererFiber.performWithPriority(1, update);
-    return root.containerInfo.promises
+    return root.containerInfo.promises[0]
 
   },
 };

@@ -43,16 +43,21 @@ export const middleware = store => next => action => {
 
 function handleSuccess(work, store, results, next, asyncWorkResolve) {
 
+  console.log('middleware/handleSuccess');
 
   for (let i =0; i < work.length; i++) {
-    next(asyncWorkResolve(work[i].key, results[i]))
+    // temp fix for issue with axios data structure on server
+    const r = results && results[i] && results[i].status == 200 && results[i].data || results[i]
+    next(asyncWorkResolve(work[i].key, r))
   }
 
   return ({work, results});
 }
 
 function handleError(work, store, error, next, asyncWorkError) {
-
+  
+  console.log('middleware/handleError', error);
+  
   if (error.message === 'React Component unmounted before async work resolved.') {
     for (let i =0; i < work.length; i++) {
       console.log('middleware cancel action', work[i].key);

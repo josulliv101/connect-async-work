@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import hoistNonReactStatic from 'hoist-non-react-statics';
 
 import AsyncWork from './AsyncWork'
 import { workState, loadState } from '../store'
@@ -29,9 +28,8 @@ export default function withAsyncWork(workItems = []) {
       };
     };
 
-    const Enhanced = connect(mapStateToProps)(({ workInitialized, workItems, ...props }) => (
+    return connect(mapStateToProps)(({ workInitialized, workItems, ...props }) => (
         <AsyncWork 
-          rootCmp={Enhanced}
           dispatch={props.dispatch}
           doWorkCalled={props.doWorkCalled}
           keys={props.keys}
@@ -43,10 +41,6 @@ export default function withAsyncWork(workItems = []) {
         </AsyncWork>
       )
     )
-
-    Enhanced.asyncWork = true
-    hoistNonReactStatic(Enhanced, AsyncWork);
-    return Enhanced
   }
 }
 
