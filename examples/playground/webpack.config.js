@@ -11,7 +11,7 @@ module.exports = {
     publicPath: '/__build__/'
   },
   resolve: { 
-    extensions: ['', '.js', '.jsx','.css']
+    extensions: ['', '.js', '.jsx','.css','.woff', '.woff2', '.eot','.ttf','.svg']
   },
   module: {
     loaders: [{
@@ -22,7 +22,16 @@ module.exports = {
     }, {
       test: /\.css$/,
       loader: 'style!css',
-      exclude: /node_modules/
-    }]
+      // exclude: /node_modules/
+    },{
+        test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        // Limiting the size of the woff fonts breaks font-awesome ONLY for the extract text plugin
+        // loader: "url?limit=10000"
+        loader: "url"
+      },
+      {
+        test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,
+        loader: 'file'
+      }]
   }
 }

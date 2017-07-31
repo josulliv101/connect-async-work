@@ -1,7 +1,6 @@
 import React from 'react'
 import { withAsyncWork } from '@josulliv101/connect-async-work'
 import { delay } from '../utils'
-import style from '../style/'
 
 const work = [
 	{ key: 'nestedParent', work : () => delay(1600).then(() => 'nestedParent work resolved') }
@@ -11,7 +10,7 @@ function NestedContent(props) {
   return (
   	<div>
   	  <h3>Nested Async Work Items</h3>
-      <h4 style={style.loadStatus}>parent work status is {props.loading ? 'loading...' : 'loaded'}</h4>
+      <h4>parent work status is {props.loading ? 'loading...' : 'loaded'}</h4>
   	  <p>{props.nestedParent}</p>	
       <NestedContentChild />
   	</div>
@@ -29,7 +28,7 @@ var NestedContentChild = withAsyncWork(work2)(
     return (
       <div>
         <h3>Child Async Work Items</h3>
-        <h4 style={style.loadStatus}>nested child work status is {props.loading ? 'loading...' : 'loaded'}</h4>
+        <h4>nested child work status is {props.loading ? 'loading...' : 'loaded'}</h4>
         <p>{props.nestedChild}</p> 
       </div>
     )

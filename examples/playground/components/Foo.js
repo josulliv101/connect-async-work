@@ -4,7 +4,6 @@ import { CANCEL } from 'redux-saga'
 
 import { withAsyncWork } from '@josulliv101/connect-async-work'
 import { delay } from '../utils'
-import style from '../style/'
 
 /*
 function fetchAPI(url) {
@@ -36,7 +35,7 @@ function Foo({loading, users = []}) {
   return (
   	<div>
   		<h3>Foo Async Work</h3>
-      <h4 style={style.loadStatus}>bar work status is {loading ? 'loading...' : 'loaded'}</h4>
+      <h4>bar work status is {loading ? 'loading...' : 'loaded'}</h4>
   		<ul>
         {users.map(user => <li key={user.id}>{user.first_name}</li>)}  
       </ul>

@@ -19,6 +19,19 @@ import {
 
 import App from './components/App'
 
+
+
+import { JssProvider, SheetsRegistry } from 'react-jss'
+import { create } from 'jss';
+import preset from 'jss-preset-default';
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import createPalette from 'material-ui/styles/palette';
+import createGenerateClassName from 'material-ui/styles/createGenerateClassName';
+import { green, red } from 'material-ui/colors';
+
+
+
+
 var favicon = require('serve-favicon')
 var path = require('path')
 
@@ -44,21 +57,50 @@ app.use(webpackDevMiddleware(webpack(webpackConfig), {
   }
 }))
 
-const HTML = ({ content, store }) => (
+const HTML = ({ content, store, css }) => (
   <html>
     <head>
       <title>connect-async-work server rendering example</title>
-      <meta charset="utf8"/>
+      <meta charSet="utf8"/>
+      <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:100,300,400,500" />
     </head>
     <body>
       <div id="root" dangerouslySetInnerHTML={{ __html: content }}/>
-      <script dangerouslySetInnerHTML={{ __html: `window.__initialState__=${serialize(store)};` }}/>
+      <style id="jss-server-side" dangerouslySetInnerHTML={{ __html: css }} />
+      <script dangerouslySetInnerHTML={{ __html: `window.__initialState__=${serialize(store)}` }}/>
       <script src="/__build__/bundle.js"/>
     </body>
   </html>
 )
 
 app.use(function (req, res) {
+
+
+  // Create a sheetsRegistry instance.
+  const sheetsRegistry = new SheetsRegistry();
+
+  // Create a theme instance.
+  const theme = createMuiTheme({
+    palette: createPalette({
+      primary: green,
+      accent: red,
+      type: 'light',
+    }),
+    overrides: {
+      MuiCircularProgress: {
+        // Name of the styleSheet
+        primaryColor: {
+          color: 'white',
+        },
+      },
+    },
+  });
+
+  // Configure JSS
+  const jss = create(preset());
+  jss.options.createGenerateClassName = createGenerateClassName;
+
+
   
   console.log('SERVER req for %s', req.url)
 
@@ -68,7 +110,11 @@ app.use(function (req, res) {
   const component = () => (
     <Provider store={store}>
       <StaticRouter context={{}} location={req.url}>
-        <App />
+        <JssProvider registry={sheetsRegistry} jss={jss}>
+          <MuiThemeProvider theme={theme} sheetsManager={new WeakMap()}>
+            <App />
+          </MuiThemeProvider>
+        </JssProvider>
       </StaticRouter>
     </Provider>
   )
@@ -78,6 +124,7 @@ app.use(function (req, res) {
     .catch(e => console.log(e))
 
   function handleResponse(content) {
+    const css = sheetsRegistry.toString()
     if (context.url) {
       res.writeHead(301, {
         Location: context.url
@@ -86,7 +133,7 @@ app.use(function (req, res) {
     } else {
       res.write(`
         <!doctype html>
-        ${ReactDOMServer.renderToStaticMarkup(<HTML content={content} store={store.getState()} />)}
+        ${ReactDOMServer.renderToStaticMarkup(<HTML content={content} css={css} store={store.getState()} />)}
       `)
       res.end()
     } 

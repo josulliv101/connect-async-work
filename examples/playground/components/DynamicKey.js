@@ -4,9 +4,6 @@ import { CANCEL } from 'redux-saga'
 
 import { withAsyncWork } from '@josulliv101/connect-async-work'
 import { delay } from '../utils'
-import style from '../style/'
-
-
 
 function fetchAPI(url) {
   const source = CancelToken.source()
@@ -25,7 +22,7 @@ function DynamicKey({ loading, keys: [workKey], [workKey]: users, ...props }) {
   return (
   	<div>
   		<h3>DynamicKey Async Work</h3>
-      <h4 style={style.loadStatus}>DynamicKey work status is {loading ? 'loading...' : 'loaded'}</h4>
+      <h4>DynamicKey work status is {loading ? 'loading...' : 'loaded'}</h4>
   		<p>{users && users.data.map(item => <img key={item.id} src={item.avatar} />)}</p>
   	</div>
   )

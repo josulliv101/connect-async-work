@@ -8,8 +8,29 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import createHistory from 'history/createBrowserHistory'
 import {middleware as asyncWorkMiddleware, reducer as asyncWorkReducer} from '@josulliv101/connect-async-work'
 
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
+import createPalette from 'material-ui/styles/palette'
+import { green, red } from 'material-ui/colors'
+
 import App from './components/App'
-import './style/main.css'
+
+
+// Create a theme instance.
+const theme = createMuiTheme({
+  palette: createPalette({
+    primary: green,
+    accent: red,
+    type: 'light',
+    overrides: {
+      MuiCircularProgress: {
+        // Name of the styleSheet
+        primaryColor: {
+          color: 'white',
+        },
+      },
+    },
+  }),
+});
 
 const devtools = typeof window === 'object' && window.devToolsExtension ?
   window.devToolsExtension : (() => noop => noop)
@@ -33,9 +54,11 @@ const store = createStore(reducer, window.__initialState__, compose(...enhancers
 
 render(
   <Provider store={store}>
-    <Router history={history}>
-      <App />
-    </Router>
+    <MuiThemeProvider theme={theme}>
+      <Router history={history}>
+        <App />
+      </Router>
+    </MuiThemeProvider>
   </Provider>,
   document.getElementById('root')
 )
