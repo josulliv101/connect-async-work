@@ -1,6 +1,5 @@
 export AsyncWork from './components/AsyncWork'
 export withAsyncWork from './components/withAsyncWork'
-export AsyncSwitch from './components/AsyncSwitch'
 export Provider from './components/Provider'
 export AsyncWorkRenderer from './renderers/AsyncWorkRendererFiber'
 export { reducer } from './store'
