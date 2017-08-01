@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import invariant from 'invariant'
 
-import { asyncDoWork, asyncWorkCancel } from '../store'
+import { asyncDoWork, asyncWorkCancel } from '../redux/store'
 
 class AsyncWork extends React.Component {
 

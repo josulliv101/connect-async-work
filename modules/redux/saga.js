@@ -1,5 +1,5 @@
 import { all, take, takeEvery, takeLatest, fork, cancel, call, put, cancelled, race, select } from 'redux-saga/effects'
-import { asyncDoWork, asyncWorkInit, asyncWorkResolve, asyncWorkError, asyncWorkCancel } from '../store'
+import { asyncDoWork, asyncWorkInit, asyncWorkResolve, asyncWorkError, asyncWorkCancel } from './store'
 
 function* asyncWorker(action) {
 

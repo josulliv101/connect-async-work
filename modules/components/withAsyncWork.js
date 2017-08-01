@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import AsyncWork from './AsyncWork'
-import { workState, loadState } from '../store'
+import { workState, loadState } from '../redux/store'
 
 export default function withAsyncWork(workItems = []) {
 

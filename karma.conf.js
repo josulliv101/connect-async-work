@@ -92,27 +92,4 @@ module.exports = (config) => {
       noInfo: true
     }
   })
-
-  if (process.env.USE_CLOUD) {
-    config.browsers = Object.keys(customLaunchers)
-    config.reporters = [ 'dots' ]
-    config.concurrency = 2
-
-    config.browserDisconnectTimeout = 10000
-    config.browserDisconnectTolerance = 3
-
-    if (process.env.TRAVIS) {
-      config.browserStack = {
-        project: projectName,
-        build: process.env.TRAVIS_BUILD_NUMBER,
-        name: process.env.TRAVIS_JOB_NUMBER
-      }
-
-      config.singleRun = true
-    } else {
-      config.browserStack = {
-        project: projectName
-      }
-    }
-  }
 }
