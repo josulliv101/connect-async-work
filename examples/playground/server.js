@@ -27,7 +27,7 @@ import preset from 'jss-preset-default';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import createPalette from 'material-ui/styles/palette';
 import createGenerateClassName from 'material-ui/styles/createGenerateClassName';
-import { green, red } from 'material-ui/colors';
+import { blue, red } from 'material-ui/colors';
 
 
 
@@ -82,7 +82,7 @@ app.use(function (req, res) {
   // Create a theme instance.
   const theme = createMuiTheme({
     palette: createPalette({
-      primary: green,
+      primary: blue,
       accent: red,
       type: 'light',
     }),

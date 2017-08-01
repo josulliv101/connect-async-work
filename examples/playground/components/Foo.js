@@ -26,7 +26,7 @@ function fetchAPI(url) {
   return request
 }
 
-const url = `https://reqres.in/api/users?delay=3`;
+const url = `https://reqres.in/api/users?delay=0`;
 
 const work = [{ key: 'users', work : () => fetchAPI(url) }]
 

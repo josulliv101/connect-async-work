@@ -10,7 +10,7 @@ import {middleware as asyncWorkMiddleware, reducer as asyncWorkReducer} from '@j
 
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles'
 import createPalette from 'material-ui/styles/palette'
-import { green, red } from 'material-ui/colors'
+import { red, blue } from 'material-ui/colors'
 
 import App from './components/App'
 
@@ -18,7 +18,7 @@ import App from './components/App'
 // Create a theme instance.
 const theme = createMuiTheme({
   palette: createPalette({
-    primary: green,
+    primary: blue,
     accent: red,
     type: 'light',
     overrides: {

@@ -2,21 +2,24 @@ import raf from 'raf/polyfill'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import compose from 'recompose/compose'
-import { Route, Switch, withRouter } from 'react-router-dom'
+import { Route, Switch as RouteSwitch, withRouter } from 'react-router-dom'
 import Button from 'material-ui/Button'
 import { DelayRoute } from '@josulliv101/delay-route'
 
 import classNames from 'classnames'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
-import { white } from 'material-ui/colors'
+import { white, common } from 'material-ui/colors'
 import Typography from 'material-ui/Typography'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
 import IconButton from 'material-ui/IconButton'
 import MenuIcon from 'material-ui-icons/Menu'
-import LightbulbOutline from 'material-ui-icons/LightbulbOutline'
+import Settings from 'material-ui-icons/Settings'
+import Fav from 'material-ui-icons/FavoriteBorder'
 import AppDrawer from './AppDrawer'
 import { CircularProgress } from 'material-ui/Progress';
+import { FormControlLabel } from 'material-ui/Form';
+import Switch from 'material-ui/Switch';
 
 // import 'typeface-roboto'
 import getRoutes from '../routes'
@@ -45,12 +48,17 @@ const styleSheet = createStyleSheet('AppFrame', theme => ({
       height: 'auto',
       width: 'auto',
     },
+    'a, a:visited, a:active, a:link': {
+      textDecoration: 'none',
+      color: 'inherit',
+    },
     '.delay-route > div:nth-child(2)': {
       display: 'none',
     },
-    'h1, h2, h3, h4, h5, h6': {
+    'h1,h2,h3,h4,h5,h6': {
       fontWeight: 400,
-    }
+    },
+
   },
   root: {
     display: 'flex',
@@ -64,6 +72,9 @@ const styleSheet = createStyleSheet('AppFrame', theme => ({
   title: {
     marginLeft: 24,
     flex: '0 1 auto',
+  },
+  flex: {
+    flex: 1,
   },
   drawer: {
     width: '250px',
@@ -88,6 +99,22 @@ const styleSheet = createStyleSheet('AppFrame', theme => ({
     maxWidth: '100%',
     margin: '0 auto',
   }),
+  footer: {
+    bottom: 0,
+    left: 'auto',
+    right: 0,
+    position: 'fixed',
+    width: 'calc(100% - 250px)',
+    background: common.faintBlack,
+    color: common.lightBlack,
+    '& > p': {
+      lineHeight: '64px',
+      '& > :first-child': {
+        position: 'relative',
+        top: 3,
+      }
+    }
+  },
   [theme.breakpoints.up(948)]: {
     content: {
       maxWidth: 900,
@@ -98,15 +125,13 @@ const styleSheet = createStyleSheet('AppFrame', theme => ({
 
 const App = ({ loading, classes }, { asyncRender = false }) => (
   <div className={classes.root}>
-    <AppBar className={classes.appBarShift}>
-      <Toolbar>
-        <Typography type="title" color="inherit" noWrap>
+    <AppBar elevation={1} className={classes.appBarShift}>
+      <Toolbar className={classNames(classes.primaryColor)} >
+        <Typography type="title" color="inherit" className={classes.flex}>
           playground
         </Typography>
-        <IconButton
-          color="contrast"
-        >
-          <LightbulbOutline />
+        <IconButton color="inherit">
+          <Settings />
         </IconButton>
       </Toolbar>
       { loading && <CircularProgress 
@@ -116,19 +141,32 @@ const App = ({ loading, classes }, { asyncRender = false }) => (
     <AppDrawer
       className={classes.drawer}
       docked={true}
-      routes={getRoutes()}
+      routes={{ routes: getRoutes() }}
       onRequestClose={noop => noop}
       open={true}
     />
-    <div className={classes.content}>
+    <section className={classes.content}>
       <main className="delay-route" >
         <DelayRoute delay={!asyncRender && loading} >
-          <Switch>
-            { getRoutes().map( ({label, ...route}) => <Route key={label} {...route} /> ) }
-          </Switch>
+          <RouteSwitch>
+            { getRoutes()
+                .reduce((arr, item) => arr.concat(item.routes), [])
+                .map( ({label, ...route}) => <Route key={label} {...route} /> ) 
+            }
+          </RouteSwitch>
         </DelayRoute>
-      </main>      
-    </div>
+{/*        <div>
+          <FormControlLabel control={<Switch />} label="Delay routes with async work" />
+          <FormControlLabel control={<Switch />} label="Show Placeholder Content while loading" />
+          <IconButton color="inherit">
+            <Settings /> Reset Redux Store (so routes with async work will need loading again)
+          </IconButton>        
+        </div>*/}
+      </main>
+    </section>
+    <footer className={classes.footer}>
+      <Typography align="center" color="inherit"><Fav style={{width: 16, height: 16}} />  Check out the next version of <a style={{fontWeight: 500}} target="_blank" href="https://material-ui-1dab0.firebaseapp.com/">Material-UI</a>.</Typography>
+    </footer>
   </div> 
 )
 

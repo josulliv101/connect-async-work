@@ -1,7 +1,7 @@
 export AsyncWork from './components/AsyncWork'
 export withAsyncWork from './components/withAsyncWork'
 export Provider from './components/Provider'
-export AsyncWorkRenderer from './renderers/AsyncWorkRendererFiber'
+// export AsyncWorkRenderer from './renderers/AsyncWorkRendererFiber'
 export { reducer } from './store'
 export { middleware } from './middleware'
 export { watchAsyncWork } from './sagas/api'

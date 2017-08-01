@@ -31,25 +31,41 @@ const styleSheet = createStyleSheet(theme => ({
 }));
 
 function renderNavItems(props, navRoot) {
-/*  let navItems = null;
+  let navItems = null;
 
-  if (navRoot.childRoutes && navRoot.childRoutes.length) {
+  if (navRoot.routes && navRoot.routes.length) {
     // eslint-disable-next-line no-use-before-define
-    navItems = navRoot.childRoutes.reduce(reduceChildRoutes.bind(null, props), []);
+    navItems = navRoot.routes.reduce(reduceChildRoutes.bind(null, props), []);
   }
-*/
+
   return (
     <List>
-      {navRoot.map((route, index) => (
-        <AppDrawerNavItem
-          key={index}
-          title={route.label}
-          to={route.path}
-          onClick={props.onRequestClose}
-        />
-      ))}
+      {navItems}
     </List>
   );
+}
+
+function reduceChildRoutes(props, items, childRoute, index) {
+
+  if (childRoute.routes && childRoute.routes.length) {
+    const openImmediately = true // props.routes.indexOf(childRoute) !== -1 || false;
+    items.push(
+      <AppDrawerNavItem key={index} openImmediately={openImmediately} title={childRoute.label}>
+        {renderNavItems(props, childRoute)}
+      </AppDrawerNavItem>,
+    );
+  } else {
+    items.push(
+      <AppDrawerNavItem
+        key={index}
+        title={childRoute.label}
+        to={childRoute.path}
+        onClick={props.onRequestClose}
+      />,
+    );
+  }
+
+  return items;
 }
 
 function AppDrawer(props) {
@@ -87,7 +103,7 @@ AppDrawer.propTypes = {
   docked: PropTypes.bool.isRequired,
   onRequestClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  routes: PropTypes.array.isRequired,
+  routes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styleSheet)(AppDrawer);
