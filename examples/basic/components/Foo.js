@@ -3,7 +3,6 @@ import { withAsyncWork } from '@josulliv101/connect-async-work'
 ////
 import { delay } from '../../utils'
 
-
 @withAsyncWork([{ 
   key: 'foo', 
   work : () => delay(1600).then(() => 'foo work resolved') 

@@ -3,21 +3,21 @@ import { middleware as asyncWorkMiddleware, reducer as asyncWorkReducer } from '
 
 export function configureStore() {
 
-	const devtools = typeof window === 'object' && window.devToolsExtension ?
-	  window.devToolsExtension : (() => noop => noop);
+  const devtools = typeof window === 'object' && window.devToolsExtension ?
+      window.devToolsExtension : (() => noop => noop);
 
-	const reducer = combineReducers({
-	  asyncwork: asyncWorkReducer,
-	})
+  const reducer = combineReducers({
+      asyncwork: asyncWorkReducer,
+  })
 
-	const middlewares = [
-	  asyncWorkMiddleware
-	]
+  const middlewares = [
+      asyncWorkMiddleware
+  ]
 
-	const enhancers = [
-	  applyMiddleware(...middlewares),
-	  devtools()
-	]
+  const enhancers = [
+      applyMiddleware(...middlewares),
+      devtools()
+  ]
 
-  return  createStore(reducer, compose(...enhancers))
+  return createStore(reducer, compose(...enhancers))
 }
