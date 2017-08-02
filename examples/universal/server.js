@@ -31,6 +31,7 @@ const HTML = ({ content, store }) => (
     <head>
       <title>connect-async-work server rendering example</title>
       <meta charSet="utf8"/>
+      <style dangerouslySetInnerHTML={{ __html: '#main>:nth-child(2){display:none;}' }} />
     </head>
     <body>
       <div id="app" dangerouslySetInnerHTML={{ __html: content }}/>
