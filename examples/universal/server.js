@@ -10,7 +10,7 @@ import ReactDOMServer from 'react-dom/server'
 import { Provider } from 'react-redux'
 import { StaticRouter } from 'react-router'
 import { batchedSubscribe } from '@josulliv101/connect-async-work'
-////
+//
 import { batchAsyncWork } from './utils'
 import App from './components/App'
 import { configureStore } from './redux/createStore'
@@ -46,6 +46,10 @@ app.use(function (req, res) {
   console.log('SERVER req for %s', req.url)
 
   const context = {}
+
+  // Add an enhancer to the store that only emits once all the async work is complete.
+  // It doesn't emit for anything else... only on async work completion (if any).
+  // This enhancer is only included on the server.
   const store = configureStore(undefined, batchedSubscribe(batchAsyncWork))
 
   const component = () => (
@@ -56,27 +60,29 @@ app.use(function (req, res) {
     </Provider>
   )
 
-
+  // Listen for when the async work is done (if any).
   let unsubscribe = store.subscribe(() => {
-    console.log('###subscribe', store.getState())
-    unsubscribe()
     const content = ReactDOMServer.renderToString(component())
-    handleResponse(content)
-    return
+    return handleResponse(content)
   })
 
-  console.time('ReactDOMServer.renderToString')
-  // Need an initial pass at rendering to kick off async work 
-  const contentFirstPass = ReactDOMServer.renderToString(component())
-  console.timeEnd('ReactDOMServer.renderToString')
+  // Don't like calling 'renderToString' twice -- but maybe the async work (the work itself, 
+  // not the results) associated with a url can be cached on the server so that rendering twice 
+  // only happens on first load.
 
+  // Render the html. This fires off async work associated with components.
+  const contentFirstPass = ReactDOMServer.renderToString(component())
+  
+  // If the first render didn't fire off any async work, we're done, return the html
   if (Object.keys(store.getState().asyncwork.loadState).length === 0) {
-    unsubscribe()
-    handleResponse(contentFirstPass)
-    return
+    return handleResponse(contentFirstPass)
   }
 
   function handleResponse(content) {
+    
+    // Listener is no longer needed
+    unsubscribe()
+
     if (context.url) {
       res.writeHead(301, {
         Location: context.url
