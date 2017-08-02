@@ -4,19 +4,19 @@ import { middleware as asyncWorkMiddleware, reducer as asyncWorkReducer } from '
 export function configureStore() {
 
   const devtools = typeof window === 'object' && window.devToolsExtension ?
-      window.devToolsExtension : (() => noop => noop);
+    window.devToolsExtension : (() => noop => noop);
 
   const reducer = combineReducers({
-      asyncwork: asyncWorkReducer,
+    asyncwork: asyncWorkReducer,
   })
 
   const middlewares = [
-      asyncWorkMiddleware
+    asyncWorkMiddleware
   ]
 
   const enhancers = [
-      applyMiddleware(...middlewares),
-      devtools()
+    applyMiddleware(...middlewares),
+    devtools()
   ]
 
   return createStore(reducer, compose(...enhancers))
