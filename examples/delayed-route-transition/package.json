@@ -1,0 +1,35 @@
+{
+  "name": "connect-async-work-basic",
+  "version": "0.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "@josulliv101/connect-async-work": "latest",
+    "@josulliv101/delay-route": "latest",
+    "history": "^4.6.3",
+    "react": "next",
+    "react-dom": "next",
+    "react-redux": "^5.0.4",
+    "react-router-dom": "^4.1.1",
+    "redux": "^3.6.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.4.5",
+    "babel-eslint": "^5.0.0-beta9",
+    "babel-loader": "^6.2.2",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "eslint": "^1.10.3",
+    "eslint-config-rackt": "^1.1.1",
+    "eslint-plugin-react": "^3.16.1",
+    "redux-devtools": "^3.1.0",
+    "redux-devtools-dock-monitor": "^1.0.1",
+    "redux-devtools-log-monitor": "^1.0.4",
+    "webpack": "^1.12.13",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --history-api-fallback --no-info --inline"
+  }
+}
