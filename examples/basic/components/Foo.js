@@ -1,19 +1,22 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { withAsyncWork } from '@josulliv101/connect-async-work'
-import { delay } from '../utils'
-import style from '../style'
+////
+import { delay } from '../../utils'
 
-const work = [{ key: 'foo', work : () => delay(1600).then(() => 'foo work resolved')}]
 
-function Foo(props) {
-  console.log('Foo / render')
-  return (
-  	<div>
-  		<h3>Foo Async Work</h3>
-      <h4 style={style.loadStatus}>bar work status is {props.loading ? 'loading...' : 'loaded'}</h4>
-  		<p>{props.foo}</p>
-  	</div>
-  )
+@withAsyncWork([{ 
+  key: 'foo', 
+  work : () => delay(1600).then(() => 'foo work resolved') 
+}])
+export default class Foo extends Component {
+  render() {
+    const {foo, loading} = this.props
+    return (
+      <div>
+        <h4>Foo Component</h4>
+        <p>I'm a react component class.</p>
+        <p>{loading ? 'loading' : foo}</p>
+      </div>
+    )
+  }
 }
-
-export default withAsyncWork(work)(Foo)
