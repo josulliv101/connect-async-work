@@ -1,7 +1,0 @@
-export App from './App'
-export Home from './Home'
-export Foo from './Foo'
-export Bar from './Bar'
-export Multi from './Multi'
-export NestedContent from './NestedContent'
-export NestedRoutes from './NestedRoutes'

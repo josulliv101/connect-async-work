@@ -1,9 +1,11 @@
 import React from 'react'
 import { withAsyncWork } from '@josulliv101/connect-async-work'
+////
+import { delay } from '../utils'
 
 const work = [{ 
   key: 'bar', 
-  work : () => Promise.resolve('bar work resolved') 
+  work : () => delay(1600).then(() => 'bar work resolved') 
 }]
 
 function Bar({loading, bar}) {

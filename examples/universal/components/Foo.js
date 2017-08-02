@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { withAsyncWork } from '@josulliv101/connect-async-work'
+//
+import { delay } from '../utils'
 
 @withAsyncWork([{ 
   key: 'foo', 
-  work : () => Promise.resolve('foo work resolved') 
+  work : () => delay(1600).then(() => 'foo work resolved') 
 }])
 export default class Foo extends Component {
   render() {
@@ -12,7 +14,8 @@ export default class Foo extends Component {
       <div>
         <h4>Foo Component</h4>
         <p>I'm a react component class.</p>
-        <p>{loading ? 'loading' : foo}</p>
+        <p>load{loading ? 'ing...' : 'ed'}</p>
+        <p>{foo}</p>
       </div>
     )
   }

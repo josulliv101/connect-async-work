@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { withAsyncWork } from '@josulliv101/connect-async-work'
+////
+import { delay } from '../utils'
 
 @withAsyncWork([{ 
   key: 'foo', 
-  work : () => Promise.resolve('foo work resolved') 
+  work : () => delay(1600).then(() => 'foo work resolved') 
 }])
 export default class Foo extends Component {
   render() {
