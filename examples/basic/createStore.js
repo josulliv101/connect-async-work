@@ -5,11 +5,13 @@ export function configureStore() {
 
   const devtools = typeof window === 'object' && window.devToolsExtension ?
     window.devToolsExtension : (() => noop => noop);
-
+  
+  // Include the async work reducer
   const reducer = combineReducers({
     asyncwork: asyncWorkReducer,
   })
 
+  // This example uses standard redux middleware. Checkout the redux-saga example too.
   const middlewares = [
     asyncWorkMiddleware
   ]

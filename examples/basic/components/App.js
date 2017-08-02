@@ -6,7 +6,7 @@ import { Bar, Foo, Home } from './'
 export default function App() {
   return (
     <div>
-      <h2>Foobar App</h2>
+      <h2>Basic Example</h2>
       <nav>
         <ul>
           <li><Link to="/">Home</Link></li>

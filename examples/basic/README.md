@@ -1,4 +1,4 @@
 connect-async-work basic example
 =================================
 
-This is a basic example. Still a WIP but is runnable as is.
+This is a basic, bare-bones example. It uses react-router v4.
