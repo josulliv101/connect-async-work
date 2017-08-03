@@ -1,13 +1,11 @@
 # connect-async-work
 
-This package is experimental & still a work in progress. It's meant as a learning tool for anyone interested in React Fiber custom renderers,  async requests with React Router v4 (server & client). 
+This package is experimental. 
 
-React version: 16.0.0-beta.2
-
-#### Goals (still in progress)
-- Universal/isomorphic (whatever you want to call it)
+#### Goals
 - Easily attach async work to a React Component & connect it to the Redux Store
 - Work with react-router v4 (both server side & client)
+- Universal/isomorphic (whatever you want to call it)
 - Route Transitions
 	- Delay router transitions
 	- No delay and show async content as it comes in
@@ -16,12 +14,15 @@ React version: 16.0.0-beta.2
 - Be able to cancel requests
 - Nested async routes
 
-Run Basic Example
-------------
+Run Universal Example
+---------------------
 
 ```sh
-cd examples/basic
+cd examples/universal
 npm install
 npm start
 ```
 
+## Notice
+
+Not a fork but lots of inspiration taken from [redux-connect](https://github.com/makeomatic/redux-connect)
