@@ -1,6 +1,6 @@
 {
   "name": "@josulliv101/connect-async-work",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "",
   "main": "lib/cjs/index.js",
   "module": "lib/es/index.js",
