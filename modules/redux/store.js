@@ -10,37 +10,26 @@ export const asyncWorkCancel = createAction('@async-work/CANCEL', key => ({ key 
 export const asyncWorkError = createAction('@async-work/ERROR', (key, error) => ({ key, error }));
 export const asyncWorkClear = createAction('@async-work/CLEAR');
 
-export const BASE = "asyncWork";
-export const WORK = "work";
-export const LOADSTATE = "loadState";
-
-export const paths = {
-  BASE: "asyncWork",
-  WORK: "work",
-  LOADSTATE: "loadState",
-}
-
-const { BASE: BASE2, WORK: WORK2, LOADSTATE: LOADSTATE2 } = paths;
+export const BASE = "asyncWork"
+export const WORK = "work"
+export const LOADSTATE = "loadState"
 
 const initialState = {
-  [WORK2]: {},
-  [LOADSTATE2]: {},
+  [WORK]: {},
+  [LOADSTATE]: {},
 }
 
-export const isLoaded = (globalState, key) => 
-              globalState[BASE2][LOADSTATE2][key] && globalState[BASE2][LOADSTATE2][key].loaded;
-
-export const isLoading = (globalState, key) => 
-              globalState[BASE2][LOADSTATE2][key] && globalState[BASE2][LOADSTATE2][key].loading;
-
-export const anyLoading = (globalState) => Object.values(globalState[BASE2][LOADSTATE2]).some(item => item.loading)
-
-export function loadState(globalState) {
-  return globalState.asyncwork.loadState;
+export function loadState(globalState = {}) {
+  return globalState.asyncwork && globalState.asyncwork.loadState;
 }
 
-export function workState(globalState) {
-  return globalState.asyncwork.work;
+export function workState(globalState = {}) {
+  return globalState.asyncwork && globalState.asyncwork.work;
+}
+
+export function anyLoading(globalState) {
+  const loadState = loadState(globalState)
+  return Object.keys(loadState).some(key => loadState[key] && loadState[key].loading)
 }
 
 export const reducer = handleActions({

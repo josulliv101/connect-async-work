@@ -28,23 +28,22 @@ export default function (req, res) {
     </Provider>
   )
 
-  // Listen for when the async work is done (if any).
+  // Listen when the async work is done.
   let unsubscribe = store.subscribe(() => {
-    console.time('contentSecondPass')
+    // All data loaded for second pass
     const contentSecondPass = ReactDOMServer.renderToString(component())
-    console.timeEnd('contentSecondPass')
     return handleResponse(contentSecondPass)
   })
 
   // Don't like calling 'renderToString' twice (above & below) -- but maybe the dispatched
-  // actions associated with a url can be cached on the server so that rendering twice 
-  // only happens on first load of a url.
+  // actions associated with a url can be cached on the server so that 2 passes at
+  // rendering (for pages with async data) only happens on the first load of a url.
+  // Or another option may be to create a speedy custom renderer who's only purpose is
+  // to fire off async work and knows to avoid parts of a site flagged as 'static'.
 
-  // Render the html. This fires off async work associated with components.
-  console.time('contentFirstPass')
+  // Render the html. This enables components to fire off async work.
   const contentFirstPass = ReactDOMServer.renderToString(component())
-  console.timeEnd('contentFirstPass')
-  
+
   // If the first render didn't fire off any async work, we're done, return the html
   if (Object.keys(store.getState().asyncwork.loadState).length === 0) {
     return handleResponse(contentFirstPass)

@@ -23,5 +23,3 @@ app.use(serverRender)
 app.listen(8080, function () {
   console.log('Server listening on http://localhost:8080, Ctrl+C to stop')
 })
-
-
