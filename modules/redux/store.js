@@ -27,8 +27,8 @@ export function workState(globalState = {}) {
   return globalState.asyncwork && globalState.asyncwork.work;
 }
 
-export function isLoading(globalState) {
-  const loadState = loadState(globalState)
+export function isLoading(globalState = {}) {
+  const loadState = globalState.asyncwork && globalState.asyncwork.loadState
   return Object.keys(loadState).some(key => loadState[key] && loadState[key].loading)
 }
 

@@ -3,8 +3,8 @@
 
 
 "@josulliv101/connect-async-work@latest":
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/@josulliv101/connect-async-work/-/connect-async-work-1.4.7.tgz#a2cd50a0148739a28565d4cf0377922c99a03e7b"
+  version "1.4.8"
+  resolved "https://registry.yarnpkg.com/@josulliv101/connect-async-work/-/connect-async-work-1.4.8.tgz#82e768a6732ac83e74b1ba0d0fbcc1b06596500e"
   dependencies:
     babel-runtime "^6.23.0"
     invariant "^2.2.2"
@@ -15,8 +15,8 @@
     uuid "^3.1.0"
 
 "@josulliv101/delay-route@latest":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@josulliv101/delay-route/-/delay-route-0.0.7.tgz#03ea18e5759cb5f78dab684658eef7170b74ca6a"
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@josulliv101/delay-route/-/delay-route-0.0.8.tgz#7b73f2fd6f9edf5095ea394c800aa7822a12559e"
   dependencies:
     invariant "^2.2.2"
     loose-envify "^1.3.1"
