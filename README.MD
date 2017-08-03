@@ -1,6 +1,6 @@
 # connect-async-work
 
-## Redux connected React component that loads async data & works with React-Router v4
+## Redux connected React component / load async data / work with React-Router v4
 
 This package is experimental. 
 
