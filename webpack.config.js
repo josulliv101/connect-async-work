@@ -2,10 +2,9 @@ const webpack = require('webpack')
 
 module.exports = {
   output: {
-    library: 'AsyncSwitch',
+    library: 'connect-async-work',
     libraryTarget: 'umd'
   },
-
   externals: {
     react: {
       root: 'React',

@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link, Route, withRouter } from 'react-router-dom'
 import { DelayRoute } from '@josulliv101/delay-route'
+import { isLoading } from '@josulliv101/connect-async-work'
 //
 import { Bar, Foo, GithubUsers, Home } from './'
 
@@ -32,10 +33,9 @@ function App({ globalLoading: loading }) {
   )
 }
 
-const mapStateToProps = ({ asyncwork: { loadState }}) => ({
+const mapStateToProps = (state) => ({
   // Check if any async work is loading. This represents the whole App's loading state.
-  // There could be nested async work going on or 1 component with lots of work.
-  globalLoading: Object.keys(loadState).some(key => loadState[key] && loadState[key].loading),
+  globalLoading: isLoading(state),
 })
 
 export default withRouter(connect(mapStateToProps)(App))

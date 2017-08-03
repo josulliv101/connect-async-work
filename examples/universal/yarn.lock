@@ -3,20 +3,20 @@
 
 
 "@josulliv101/connect-async-work@latest":
-  version "1.4.6"
-  resolved "https://registry.yarnpkg.com/@josulliv101/connect-async-work/-/connect-async-work-1.4.6.tgz#8b104de47de05ddc073620bd03d9b04a2cc9f508"
+  version "1.4.7"
+  resolved "https://registry.yarnpkg.com/@josulliv101/connect-async-work/-/connect-async-work-1.4.7.tgz#a2cd50a0148739a28565d4cf0377922c99a03e7b"
   dependencies:
     babel-runtime "^6.23.0"
     invariant "^2.2.2"
     loose-envify "^1.3.1"
     prop-types "^15.5.4"
-    redux-actions "^2.1.0"
+    redux-actions "^2.2.1"
     redux-saga "^0.15.5"
     uuid "^3.1.0"
 
 "@josulliv101/delay-route@latest":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@josulliv101/delay-route/-/delay-route-0.0.6.tgz#b390b4bedf65ed5d90682cbfb857a80f2dbe4a5f"
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@josulliv101/delay-route/-/delay-route-0.0.7.tgz#03ea18e5759cb5f78dab684658eef7170b74ca6a"
   dependencies:
     invariant "^2.2.2"
     loose-envify "^1.3.1"
@@ -3094,7 +3094,7 @@ reduce-reducers@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/reduce-reducers/-/reduce-reducers-0.1.2.tgz#fa1b4718bc5292a71ddd1e5d839c9bea9770f14b"
 
-redux-actions@^2.1.0:
+redux-actions@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/redux-actions/-/redux-actions-2.2.1.tgz#d64186b25649a13c05478547d7cd7537b892410d"
   dependencies:
