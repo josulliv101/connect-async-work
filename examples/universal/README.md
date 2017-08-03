@@ -1,4 +1,7 @@
-connect-async-work basic example
-=================================
+connect-async-work universal example
+====================================
 
-This is a basic, bare-bones example. It uses react-router v4.
+This is the universal example. It demonstrates loading async data both
+on the server and client. On the server a custom redux store enhancer is
+used to only emit when async work is complete, giving a chance to do a 
+final render with all data loaded.

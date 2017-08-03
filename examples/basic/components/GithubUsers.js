@@ -3,9 +3,7 @@ import { withAsyncWork } from '@josulliv101/connect-async-work'
 
 @withAsyncWork([{ 
   key: 'users', 
-  work : () => fetch('https://api.github.com/users')
-                .then(resp => resp.json())
-                .catch((e) => console.log('err', e))
+  work : () => api('https://api.github.com/users')
 }])
 export default class GithubUsers extends Component {
   render() {
@@ -20,4 +18,12 @@ export default class GithubUsers extends Component {
       </div>
     )
   }
+}
+
+function api(url) {
+  return (
+    fetch(url)
+      .then(resp => resp.json())
+      .catch((e) => console.log('err', e))
+  )
 }
