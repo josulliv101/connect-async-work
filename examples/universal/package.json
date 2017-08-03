@@ -35,7 +35,7 @@
     "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "start": "webpack-dev-server --history-api-fallback --no-info --inline",
+    "start": "babel-node server.js",
     "watch": "nodemon --ignore node_modules/ server.js --exec babel-node"
   }
 }

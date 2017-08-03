@@ -1,6 +1,6 @@
 # connect-async-work
 
-### Load async data / work with React-Router v4 / Redux connected React component
+### Load async data / Redux connected / work with React-Router v4
 
 This package is experimental. 
 
@@ -23,4 +23,4 @@ npm start
 
 ### Notice
 
-Not a fork but lots of inspiration taken from [redux-connect](https://github.com/makeomatic/redux-connect)
+Lots of inspiration taken from [redux-connect](https://github.com/makeomatic/redux-connect)
