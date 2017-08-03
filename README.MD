@@ -1,10 +1,11 @@
 # connect-async-work
 
-## Universal/Isomorphic Redux Connected Component To Load Async Data (work with React-Router v4)
+## Redux connected React component that loads async data & works with React-Router v4
 
 This package is experimental. 
 
-#### Goals
+## Goals
+
 - Easily attach async work to a React Component & connect it to the Redux Store
 - Work with react-router v4 (both server side & client)
 - Universal/isomorphic (whatever you want to call it)
