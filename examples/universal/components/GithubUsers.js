@@ -18,7 +18,7 @@ export default class GithubUsers extends Component {
     return (
       <div>
         <h4>GithubUsers Component</h4>
-        <p>I'm a react component class.</p>
+        <p>I am a react component class.</p>
         <p>load{loading ? 'ing...' : 'ed'}</p>
         { users.map(user => <img key={user.id} src={user.avatar_url} style={style} /> ) }
       </div>

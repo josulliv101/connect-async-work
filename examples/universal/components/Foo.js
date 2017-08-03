@@ -13,7 +13,7 @@ export default class Foo extends Component {
     return (
       <div>
         <h4>Foo Component</h4>
-        <p>I'm a react component class.</p>
+        <p>I am a react component class.</p>
         <p>load{loading ? 'ing...' : 'ed'}</p>
         <p>{foo}</p>
       </div>

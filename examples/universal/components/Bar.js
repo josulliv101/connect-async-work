@@ -12,7 +12,7 @@ function Bar({loading, bar}) {
   return (
     <div>
       <h4>Bar Component</h4>
-      <p>I'm a pure function.</p>
+      <p>I am a pure function.</p>
       <p>load{loading ? 'ing...' : 'ed'}</p>
       <p>{bar}</p>
     </div>
