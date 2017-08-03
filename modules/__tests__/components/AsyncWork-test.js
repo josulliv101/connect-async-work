@@ -1,27 +1,21 @@
 import expect from 'expect'
-import sinon, { spy } from 'sinon'
 import { mount, render } from 'enzyme'
-
 import React from 'react'
-
+//
 import AsyncWork from '../../components/AsyncWork'
 
+
 describe('<AsyncWork />', () => {
-  
-  // const reducers = combineReducers({ asyncWork: reducer })
-  const context = { 
-      asyncRender: true
-  }
- 
+
+  beforeEach(function () {
+
+  })
+
+  afterEach(function () {
+    expect.restoreSpies()
+  })
+
   describe('Life cycle hooks', () => {
-
-    beforeEach(function () {
-
-    });
-
-    afterEach(function () {
-
-    });
     
     describe('Constructor', () => {
 
@@ -50,58 +44,43 @@ describe('<AsyncWork />', () => {
       }).toThrow()
     })
 
-    it('wraps the rendered elements with a AsyncWork tag when asyncRender context is true', () => {
-      const wrapper = mount(
-        <AsyncWork dispatch={noop => noop}>
-          <div />
-        </AsyncWork>
-      )
-      const wrapperAsyncRender = mount(
-        <AsyncWork dispatch={noop => noop}>
-          <div></div>
-        </AsyncWork>,
-        { context }
-      )
-      expect(wrapper.html()).toBe('<div></div>');
-      expect(wrapperAsyncRender.html()).toMatch(/^<AsyncWork/i);
-    })
-
   });
 
   describe('Actions', () => {
 
     it('dispatches WORK DO action when doWorkCalled is false (the default)', () => {
-      const spy = sinon.spy();
+      const spy = expect.createSpy()
       const wrapper = mount(<AsyncWork dispatch={spy} />)
-      expect(spy.calledOnce).toBe(true);
+      expect(spy.calls.length).toEqual(1)
     })
 
     it('does not dispatch WORK DO action when work already requested', () => {
-      const spy = sinon.spy();
+      const spy = expect.createSpy()
       const wrapper = mount(<AsyncWork doWorkCalled={true} dispatch={spy} />)
-      expect(spy.notCalled).toBe(true);
+      expect(spy.calls.length).toEqual(0)
     })
 
     it('creates a uid for each WORK DO action', () => {
-      const spy = sinon.spy();
+      const spy = expect.createSpy()
       const wrapper = mount(<AsyncWork dispatch={spy} />)
-      expect(spy.getCall(0).args[0].type).toBe('@async-work/DO_WORK');
-      expect(spy.getCall(0).args[0].meta.id).toExist();
+      const firstArg = spy.calls[0].arguments[0]
+      expect(firstArg.type).toBe('@async-work/DO_WORK');
+      expect(firstArg.meta.id).toExist();
     })
 
     it('will dispatch a WORK CANCEL action (id created from "do work" action) if loading on unmount', () => {
       
-      const spy = sinon.spy();
+      const spy = expect.createSpy()
       const wrapper = mount(
         <AsyncWork dispatch={spy} />
       );
 
       wrapper.unmount();
       
-      const id = spy.getCall(0).args[0].meta.id;
-      const idDispatched = spy.getCall(1).args[0].type;
+      const id = spy.calls[0].arguments[0].meta.id;
+      const idDispatched = spy.calls[1].arguments[0].type;
 
-      expect(spy.calledTwice).toBe(true);
+      expect(spy.calls.length).toBe(2);
       expect(idDispatched).toEqual(id);
 
     })

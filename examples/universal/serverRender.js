@@ -38,12 +38,13 @@ export default function (req, res) {
 
   // Don't like calling 'renderToString' twice (above & below) -- but maybe the dispatched
   // actions associated with a url can be cached on the server so that rendering twice 
-  // only happens on first load.
+  // only happens on first load of a url.
 
   // Render the html. This fires off async work associated with components.
   console.time('contentFirstPass')
   const contentFirstPass = ReactDOMServer.renderToString(component())
   console.timeEnd('contentFirstPass')
+  
   // If the first render didn't fire off any async work, we're done, return the html
   if (Object.keys(store.getState().asyncwork.loadState).length === 0) {
     return handleResponse(contentFirstPass)

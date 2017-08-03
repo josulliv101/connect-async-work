@@ -6,7 +6,11 @@ export default ({ content, store }) => (
     <head>
       <title>connect-async-work universal example</title>
       <meta charSet="utf8"/>
-      {/* Up to the developer to hide the delayed route when new and old route are rendered. */}
+      {/* 
+        Up to the developer to hide the delayed route when new and old route are rendered. 
+        It's an inconvenience, but the alternative is to wrap the route in a <div/> that's
+        hidden -- would rather not change DOM structure.
+      */}
       <style dangerouslySetInnerHTML={{ __html: '#main>:nth-child(2){display:none;}' }} />
     </head>
     <body>

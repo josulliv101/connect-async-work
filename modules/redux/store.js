@@ -5,7 +5,6 @@ function noop() {}
 
 // Middleware handles how work should translate into actions that update the store
 export const asyncDoWork = createAction('@async-work/DO_WORK', key => ({ key }), (work = [], promises = [], asyncRender = false, callback = noop, id = uuidv4()) => ({ id, promises, work, asyncRender, callback, cancel: () => ({ type: id, meta: { promises } }) }));
-export const asyncWorkInit = createAction('@async-work/INIT', key => ({ key }), (key, work = []) => ({ key, work }));
 export const asyncWorkResolve = createAction('@async-work/RESOLVE', (key, data) => ({ key, data }), (key) => ({ key }));
 export const asyncWorkCancel = createAction('@async-work/CANCEL', key => ({ key }));
 export const asyncWorkError = createAction('@async-work/ERROR', (key, error) => ({ key, error }));
@@ -53,16 +52,6 @@ export const reducer = handleActions({
       ...(work.reduce((o, item) => (o[item.key] = {loading: true, loaded: false}) && o, {})),
     },
   }),
-/*  [asyncWorkInit]: (state, {payload: { key }}) => ({
-    ...state,
-    loadState: {
-      ...state.loadState,
-      [key]: {
-        loading: true,
-        loaded: false,
-      },
-    },
-  }),*/
   [asyncWorkResolve]: (state, {payload: { key, data }}) => ({
     ...state,
     loadState: {

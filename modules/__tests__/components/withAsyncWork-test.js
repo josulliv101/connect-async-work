@@ -1,5 +1,4 @@
 import expect from 'expect'
-import sinon from 'sinon'
 import { mount, render } from 'enzyme'
 
 import React from 'react'

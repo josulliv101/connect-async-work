@@ -1,6 +1,5 @@
 export AsyncWork from './components/AsyncWork'
 export withAsyncWork from './components/withAsyncWork'
-export Provider from './components/Provider'
 export { reducer } from './redux/store'
 export { middleware } from './redux/middleware'
 export { batchedSubscribe } from './redux/batchedSubscribe'

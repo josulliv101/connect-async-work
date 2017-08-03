@@ -68,7 +68,6 @@ export function batchedSubscribe(batch) {
   }
 
   function notifyListenersBatched(store) {
-    console.log('store state', store.getState())
     batch(notifyListeners, store.getState());
   }
 
