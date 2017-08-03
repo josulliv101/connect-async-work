@@ -1,5 +1,7 @@
 # connect-async-work
 
+## Universal/Isomorphic Redux Connected Component To Load Async Data (work with React-Router v4)
+
 This package is experimental. 
 
 #### Goals
@@ -7,9 +9,9 @@ This package is experimental.
 - Work with react-router v4 (both server side & client)
 - Universal/isomorphic (whatever you want to call it)
 - Route Transitions
-	- Delay router transitions
-	- No delay and show async content as it comes in
-	- Display a CNN/LinkedIn-style content placeholder 
+	- Delay router transitions until async content loaded
+	- No transition delay and show async content as it comes in
+	- Display a CNN/LinkedIn-style content placeholder while async content loads
 - Work with typical redux middleware/redux-saga middleware
 - Be able to cancel requests
 - Nested async routes
