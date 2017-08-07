@@ -4,6 +4,8 @@
 
 This package is experimental. 
 
+[Demo](https://connect-async-work-demo.herokuapp.com/)
+
 ### Goals
 
 - Attach async work to a React Component & connect it to the Redux Store
