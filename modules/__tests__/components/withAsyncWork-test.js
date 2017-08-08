@@ -14,6 +14,7 @@ describe('withAsyncWork HOC', () => {
           asyncwork: { 
             work: { 
               foo: 'foo data',
+              foo2: 'foo2 data',
               bar: null,
               foo123: 'foo123 created by fn',
             }, 
@@ -32,6 +33,7 @@ describe('withAsyncWork HOC', () => {
 
   const work = () => Promise.resolve('done');
   const workResolved = [{ key: 'foo', work }]
+  const workResolvedMulti = [{ key: 'foo', work }, { key: 'foo2', work }]
   const workResolvedFnKey = [{ key: (match) => `foo${match.params.id}`, work }]
   const workUninitialized = [{ key: 'bar', work }]
   const workMulti = [{ key: 'foo', work }, { key: 'bar', work }, { key: 'baz', work }]
@@ -86,6 +88,16 @@ describe('withAsyncWork HOC', () => {
         { context }
       );
       expect(wrapper.text()).toBe('foo data')
+    })
+
+    it('passes multiple work items <string>keys as props to <Enhanced />', () => {
+      
+      const Enhanced = withAsyncWork(workResolvedMulti)(props => <div>{props.foo}/{props.foo2}</div>)
+      const wrapper = mount(
+        <Enhanced />,
+        { context }
+      );
+      expect(wrapper.text()).toBe('foo data/foo2 data')
     })
 
     it('passes the work items <function>keys as props to <Enhanced />', () => {
