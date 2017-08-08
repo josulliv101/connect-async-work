@@ -42,9 +42,7 @@ export const middleware = store => next => action => {
 function handleSuccess(work, store, results, next, asyncWorkResolve) {
 
   for (let i =0; i < work.length; i++) {
-    // temp fix for issue with axios data structure on server
-    // const r = results && results[i] && results[i].status == 200 && results[i].data || results[i]
-    next(asyncWorkResolve(work[i].key, results && results.length && results[0]))
+    next(asyncWorkResolve(work[i].key, results && results.length && results[i]))
   }
 
   return ({work, results});
