@@ -18,6 +18,10 @@ class AsyncWork extends React.Component {
     workItems: [],
   };
 
+  static contextTypes = {
+    apiClient: PropTypes.object,
+  };
+
   constructor(props, context) {
 
     super(props, context);
@@ -29,7 +33,7 @@ class AsyncWork extends React.Component {
     // This info maps to redux store
     if (doWorkCalled === true) return;
     
-    promises = workItems.map(item => item.work(dispatch))
+    promises = workItems.map(item => item.work(dispatch, props, context))
 
     this.action = asyncDoWork(workItems, promises, false)
     this.workPromises = this.action.meta.promises
