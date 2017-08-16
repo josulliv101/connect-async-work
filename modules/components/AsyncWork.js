@@ -29,7 +29,7 @@ class AsyncWork extends React.Component {
     // This info maps to redux store
     if (doWorkCalled === true) return;
     
-    promises = workItems.map(item => item.work())
+    promises = workItems.map(item => item.work(dispatch))
 
     this.action = asyncDoWork(workItems, promises, false)
     this.workPromises = this.action.meta.promises
