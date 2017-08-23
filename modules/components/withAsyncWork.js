@@ -35,6 +35,8 @@ export default function withAsyncWork(workItems = []) {
           keys={props.keys}
           loaded={props.loaded}
           loading={props.loading}
+          location={props.location}
+          match={props.match}
           // Pass on a copy of work items where any work item <func>keys are swapped for <string>keys
           workItems={workItems.map((item, i) => ({ key: props.keys[i], work: item.work }))}>
           <WrappedComponent {...props} />
