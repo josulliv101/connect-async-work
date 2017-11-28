@@ -30,6 +30,7 @@ export default function withAsyncWork(workItems = []) {
 
     return connect(mapStateToProps)(({ workInitialized, workItems, ...props }) => (
         <AsyncWork 
+          key={props.keys && props.keys.join('|')}
           {...props}
           // Pass on a copy of work items where any work item <func>keys are swapped for <string>keys
           workItems={workItems.map((item, i) => ({ key: props.keys[i], work: item.work }))}>
